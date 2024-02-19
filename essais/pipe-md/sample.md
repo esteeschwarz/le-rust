@@ -1,3 +1,4 @@
+entryline
 # 14074.sample
 - pipe md
 ## head 2
