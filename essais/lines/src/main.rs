@@ -18,8 +18,8 @@ use std::fs;
 use std::fs::File;
 use std::fs::OpenOptions;
 use std::io::{self, Write};
-//use regex::Regex;
-use fancy_regex::Regex;
+use regex::Regex;
+//use fancy_regex::Regex;
 
 use input_conv::read_string;
 use input_conv::read_char;
@@ -52,11 +52,7 @@ fn read_stdin() -> io::Result<String> {
         println!("reading from file");
         // Stdin is redirected (piped input)
        // let mut buffer = io::read_to_string(io::stdin())?;
-<<<<<<< HEAD
-       let pathfix = "pinghooks.md";
-=======
        let pathfix = "13123.ada.pinghook.md";
->>>>>>> d90ee8527d9923624320533d4049b2904bf117ac
        let path = if let Some(path) = std::env::args().nth(1) {
         path
     }   
@@ -91,26 +87,6 @@ fn main() -> io::Result<()> {
     let re_h6 = Regex::new(r"###### (.+?)<").unwrap();
     let re_p = Regex::new(r"\n(.+?)\n|\n(.+?)$").unwrap();
     let re_t = Regex::new(r"\[(.+?)\]\((.+?)\)").unwrap();
-<<<<<<< HEAD
-    // Perform the replacement
-    //let mut modified_content = re_p.replace_all(&input, "<p>$1$2</p>");
-    //let mut modified_content = re_h6.replace_all(&modified_content, "<h6>$1</h6><");
-    //let mut modified_content = re_h5.replace_all(&modified_content, "<h5>$1</h5><");
-    //let mut modified_content = re_h4.replace_all(&modified_content, "<h4>$1</h4><");
-    //let mut modified_content = re_h3.replace_all(&modified_content, "<h3>$1</h3><");
-    //let mut modified_content = re_h2.replace_all(&modified_content, "<h2>$1</h2><");
-    //let mut modified_content = re_h1.replace_all(&modified_content, "<h1>$1</h1><");
-    let mut modified_content = re_t.replace_all(&modified_content, "$1,$2");
-    let modified_content2 = "hund";
-     if modified_content == "" {
-        modified_content = std::borrow::Cow::Borrowed(modified_content2);
-    }
-    let output_file = "sample-out.txt";
-let header = "<!DOCTYPE html><html><head><meta name='viewport' content='width=device-width, initial-scale=1.0'><meta charset='utf-8' /><link rel='stylesheet' type='text/css' href='https://ada-sub.dh-index.org/school/css/style.css' /><title>14074.le-rust</title></head><body>";
-let finbody = "</body></html>";
-println!("{}{}{}",header,modified_content,finbody);
-println!("{}",modified_content);
-=======
     let re_sub1 = Regex::new(r"- (.+?):[^/]").unwrap();
     let re_subt = Regex::new(r"\t- (.+?):[^/]").unwrap();
     let re_tx = Regex::new(r"\[(.+)\]\((http.?://.+)\)(.+)?").unwrap();
@@ -155,6 +131,5 @@ writeln!(file,"{}{}",header,modified_content);
 //let mut file = fs::File::create(output_file).unwrap();
 //file.write_all(modified_content.as_bytes()).unwrap();
 //fs::write(output_file, modified_content.println!())?;
->>>>>>> d90ee8527d9923624320533d4049b2904bf117ac
     Ok(())
 }
