@@ -18,7 +18,9 @@ use std::fs;
 use std::fs::File;
 use std::fs::OpenOptions;
 use std::io::{self, Write};
-use regex::Regex;
+//use regex::Regex;
+use fancy_regex::Regex;
+
 use input_conv::read_string;
 use input_conv::read_char;
 //use std::io::{self, Read};
@@ -113,8 +115,10 @@ println!("{}",modified_content);
     let re_subt = Regex::new(r"\t- (.+?):[^/]").unwrap();
     let re_tx = Regex::new(r"\[(.+)\]\((http.?://.+)\)(.+)?").unwrap();
     let re_first = Regex::new(r"#nomatch#").unwrap();
-    let re_note = Regex::new(r"\[(.+)\]\((http.?://.+)\) (#note: (.+)#)?").unwrap();
-    
+    let re_note = Regex::new(r"\[(.+)\]\((http.?://.+)\)(.+(^#note:))? (#note: (.+)#)?").
+    unwrap();
+    let re_note_com = Regex::new(r"\[(.+)\]\((http.?://.+)\) (.+[^#note:])? ?(#note:.+)#?").unwrap();
+
     //let re_h1 = Regex::new(r"- (.+?):[^/]").unwrap();
     //let re_h1 = Regex::new(r"- (.+?):[^/]").unwrap();
 
@@ -123,13 +127,14 @@ println!("{}",modified_content);
     let mut modified_content = re_sub1.replace_all(&modified_content, ";;;;$1;;;\n");
 
     let mut modified_content = re_subt.replace_all(&modified_content, ";;;;$1;;;");
-    let mut modified_content = re_note.replace_all(&modified_content, ";;;;;;$1;$2;;$3");
-
     let mut modified_content = re_tx.replace_all(&modified_content, ";;;;;;$1;$2;$3");
+    let mut modified_content = re_note_com.replace_all(&modified_content, ";;;;;;$1;$2;$3;$4");
+   // let mut modified_content = re_note.replace_all(&modified_content, ";;;;;;$1;$2;$3;$4");
+
     
     let mut modified_content = re_h5.replace_all(&modified_content, ";;;$1;;;;");
     let mut modified_content = re_h4.replace_all(&modified_content, ";;$1;;;;;");
-    let mut modified_content = re_tx.replace_all(&modified_content, ";;;;;;$1;$2;$3");
+  //  let mut modified_content = re_tx.replace_all(&modified_content, ";;;;;;$1;$2;$3");
 
     let mut modified_content = re_h1.replace_all(&modified_content, ";$1;;;;;;");
     let output_file = "pinghook.csv";
