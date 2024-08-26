@@ -1,4 +1,13 @@
-kafn hello() {
+fn sam() {
+    println!("Hello, world!");
+}
+
+// fn lines(){
+// let path = "sample.md";
+//     let string = path.read_lines_into_string().unwrap();
+
+// }
+fn hello() {
     println!("Hello, world!");
 }
 
@@ -12,6 +21,11 @@ use input_conv::read_string;
 use input_conv::read_char;
 //use std::io::{self, Read};
 use atty::Stream;
+use read_lines_into::traits::*;
+use std::path::Path;
+use read_lines_into::traits::*;
+ 
+// Choose any existing text file
 
 ///////////////////////////
 /// /// pipe check
@@ -27,11 +41,23 @@ fn read_stdin() -> io::Result<String> {
        let mut buffer = String::new();
      // let mut buffer = io::read_to_string(io::stdin())?;
         io::stdin().read_line(&mut buffer)?;
+        path = Path::new(io::stdin().read_line(&mut buffer)?;);
+        buffer = path.read_into_string().unwrap();
         Ok(buffer)
     } else {
         println!("reading from pipe");
         // Stdin is redirected (piped input)
-        let mut buffer = io::read_to_string(io::stdin())?;
+       // let mut buffer = io::read_to_string(io::stdin())?;
+       let pathfix = "../pipe-md/sample.md";
+       let path = if let Some(path) = std::env::args().nth(1) {
+        path
+    }   
+    else {
+         pathfix.to_string()    
+    };
+
+       let mut buffer = Path::new(&path).read_lines_into_string().unwrap();
+
   //      io::stdin().read_line(&mut buffer)?;
         Ok(buffer)
     }

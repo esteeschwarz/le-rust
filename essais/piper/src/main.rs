@@ -69,10 +69,10 @@ fn main() -> io::Result<()> {
     //     }
     
     // Define your regex pattern
-    let re = Regex::new(r"mal").unwrap();
+    let re = Regex::new(r"hund").unwrap();
 
     // Perform the replacement
-    let mut modified_content = re.replace_all(&input, "hund");
+    let mut modified_content = re.replace_all(&input, "katze");
     let modified_content2 = "hund";
     //modified_content2 = re.replace_all("", "hund");
      if modified_content == "" {
