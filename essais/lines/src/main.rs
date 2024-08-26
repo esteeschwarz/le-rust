@@ -48,7 +48,7 @@ fn read_stdin() -> io::Result<String> {
         println!("reading from pipe");
         // Stdin is redirected (piped input)
        // let mut buffer = io::read_to_string(io::stdin())?;
-       let pathfix = "../pipe-md/sample.md";
+       let pathfix = "pinghooks.md";
        let path = if let Some(path) = std::env::args().nth(1) {
         path
     }   
@@ -72,14 +72,16 @@ fn main() -> io::Result<()> {
     let re_h5 = Regex::new(r"##### (.+?)<").unwrap();
     let re_h6 = Regex::new(r"###### (.+?)<").unwrap();
     let re_p = Regex::new(r"\n(.+?)\n|\n(.+?)$").unwrap();
+    let re_t = Regex::new(r"\[(.+?)\]\((.+?)\)").unwrap();
     // Perform the replacement
-    let mut modified_content = re_p.replace_all(&input, "<p>$1$2</p>");
-    let mut modified_content = re_h6.replace_all(&modified_content, "<h6>$1</h6><");
-    let mut modified_content = re_h5.replace_all(&modified_content, "<h5>$1</h5><");
-    let mut modified_content = re_h4.replace_all(&modified_content, "<h4>$1</h4><");
-    let mut modified_content = re_h3.replace_all(&modified_content, "<h3>$1</h3><");
-    let mut modified_content = re_h2.replace_all(&modified_content, "<h2>$1</h2><");
-    let mut modified_content = re_h1.replace_all(&modified_content, "<h1>$1</h1><");
+    //let mut modified_content = re_p.replace_all(&input, "<p>$1$2</p>");
+    //let mut modified_content = re_h6.replace_all(&modified_content, "<h6>$1</h6><");
+    //let mut modified_content = re_h5.replace_all(&modified_content, "<h5>$1</h5><");
+    //let mut modified_content = re_h4.replace_all(&modified_content, "<h4>$1</h4><");
+    //let mut modified_content = re_h3.replace_all(&modified_content, "<h3>$1</h3><");
+    //let mut modified_content = re_h2.replace_all(&modified_content, "<h2>$1</h2><");
+    //let mut modified_content = re_h1.replace_all(&modified_content, "<h1>$1</h1><");
+    let mut modified_content = re_t.replace_all(&modified_content, "$1,$2");
     let modified_content2 = "hund";
      if modified_content == "" {
         modified_content = std::borrow::Cow::Borrowed(modified_content2);
@@ -88,5 +90,6 @@ fn main() -> io::Result<()> {
 let header = "<!DOCTYPE html><html><head><meta name='viewport' content='width=device-width, initial-scale=1.0'><meta charset='utf-8' /><link rel='stylesheet' type='text/css' href='https://ada-sub.dh-index.org/school/css/style.css' /><title>14074.le-rust</title></head><body>";
 let finbody = "</body></html>";
 println!("{}{}{}",header,modified_content,finbody);
+println!("{}",modified_content);
     Ok(())
 }
