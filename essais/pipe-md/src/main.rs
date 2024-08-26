@@ -1,4 +1,4 @@
-fn hello() {
+kafn hello() {
     println!("Hello, world!");
 }
 
