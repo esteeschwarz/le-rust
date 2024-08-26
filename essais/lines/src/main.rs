@@ -34,18 +34,18 @@ use read_lines_into::traits::*;
 
 
 fn read_stdin() -> io::Result<String> {
-    let modified_content = "nostrings";
-    if atty::is(Stream::Stdin) {
+    let modified_content = "[testlink123](https://faz.net)";
+    //if atty::is(Stream::Stdin) {
         // Stdin is connected to a terminal (interactive input)
-        println!("Please enter your input:");
-       let mut buffer = String::new();
+      //  println!("Please enter your input:");
+       //let mut buffer = String::new();
      // let mut buffer = io::read_to_string(io::stdin())?;
-        io::stdin().read_line(&mut buffer)?;
-        path = Path::new(io::stdin().read_line(&mut buffer)?;);
-        buffer = path.read_into_string().unwrap();
-        Ok(buffer)
-    } else {
-        println!("reading from pipe");
+        //io::stdin().read_line(&mut buffer)?;
+       // path = Path::new(io::stdin().read_line(&mut buffer)?;);
+        //buffer = path.read_into_string().unwrap();
+        //Ok(buffer)
+   // } else {
+        println!("reading from file");
         // Stdin is redirected (piped input)
        // let mut buffer = io::read_to_string(io::stdin())?;
        let pathfix = "pinghooks.md";
@@ -53,7 +53,7 @@ fn read_stdin() -> io::Result<String> {
         path
     }   
     else {
-         pathfix.to_string()    
+        pathfix.to_string()    
     };
 
        let mut buffer = Path::new(&path).read_lines_into_string().unwrap();
@@ -61,10 +61,11 @@ fn read_stdin() -> io::Result<String> {
   //      io::stdin().read_line(&mut buffer)?;
         Ok(buffer)
     }
-}
+//}
 
 fn main() -> io::Result<()> {
      let input = read_stdin()?;
+     //let modified_content = "[testlink](https://faz.net)";
     let re_h1 = Regex::new(r"# ?(.+?)<").unwrap();
     let re_h2 = Regex::new(r"## (.+?)<").unwrap();
     let re_h3 = Regex::new(r"### (.+?)<").unwrap();
@@ -81,7 +82,7 @@ fn main() -> io::Result<()> {
     //let mut modified_content = re_h3.replace_all(&modified_content, "<h3>$1</h3><");
     //let mut modified_content = re_h2.replace_all(&modified_content, "<h2>$1</h2><");
     //let mut modified_content = re_h1.replace_all(&modified_content, "<h1>$1</h1><");
-    let mut modified_content = re_t.replace_all(&modified_content, "$1,$2");
+    let mut modified_content = re_t.replace_all(&input, "$1,$2");
     let modified_content2 = "hund";
      if modified_content == "" {
         modified_content = std::borrow::Cow::Borrowed(modified_content2);
@@ -91,5 +92,6 @@ let header = "<!DOCTYPE html><html><head><meta name='viewport' content='width=de
 let finbody = "</body></html>";
 println!("{}{}{}",header,modified_content,finbody);
 println!("{}",modified_content);
+fs::write(output_file, println(modified_content))?;
     Ok(())
 }
