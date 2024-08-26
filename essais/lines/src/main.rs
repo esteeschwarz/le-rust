@@ -85,34 +85,44 @@ fn main() -> io::Result<()> {
     let re_h4 = Regex::new(r"#### (.+)").unwrap();
     let re_h5 = Regex::new(r"##### (.+)").unwrap();
     let re_h6 = Regex::new(r"###### (.+?)<").unwrap();
-    let re_p = Regex::new(r"\n(.+?)\n|\n(.+?)$").unwrap();
-    let re_t = Regex::new(r"\[(.+?)\]\((.+?)\)").unwrap();
-    let re_sub1 = Regex::new(r"- (.+?):[^/]").unwrap();
-    let re_subt = Regex::new(r"\t- (.+?):[^/]").unwrap();
-    let re_tx = Regex::new(r"\[(.+)\]\((http.?://.+)\)(.+)?").unwrap();
+    let t1 = Regex::new(r"\[(.*?)\]\((.*?)\) (.+(?!#(.+)#)) (#.+#)").unwrap();
+    let t2 = Regex::new(r"\[(.*?)\]\((.*?)\) (.+(?!#(.+)#))").unwrap();
+    let t3 = Regex::new(r"(.*)#note: (.*)#").unwrap();
+    let t4 = Regex::new(r"\[(.*?)\]\((.*?)\).*").unwrap();
+    let t5 = Regex::new(r";$").unwrap();
     let re_first = Regex::new(r"#nomatch#").unwrap();
-    let re_note = Regex::new(r"\[(.+)\]\((http.?://.+)\)(.+(^#note:))? (#note: (.+)#)?").
-    unwrap();
-    let re_note_com = Regex::new(r"\[(.+)\]\((http.?://.+)\) (.+[^#note:])? ?(#note:.+)#?").unwrap();
+    let re_sem = Regex::new(r"(?m)^([A-Za-z].*)").unwrap(); // with flag multiline
+
+   // let re_p = Regex::new(r"\n(.+?)\n|\n(.+?)$").unwrap();
+  //  let re_t = Regex::new(r"\[(.+?)\]\((.+?)\)").unwrap();
+  //  let re_sub1 = Regex::new(r"- (.+?):[^/]").unwrap();
+  //  let re_subt = Regex::new(r"\t- (.+?):[^/]").unwrap();
+  //  let re_tx = Regex::new(r"\[(.+)\]\((http.?://.+)\)(.+)?").unwrap();
+  //  let re_note = Regex::new(r"\[(.+)\]\((http.?://.+)\)(.+(^#note:))? (#note: (.+)#)?").unwrap();
+  //  let re_note_com = Regex::new(r"\[(.+)\]\((http.?://.+)\) (.+[^#note:])? ?(#note:.+)#?").unwrap();
 
     //let re_h1 = Regex::new(r"- (.+?):[^/]").unwrap();
     //let re_h1 = Regex::new(r"- (.+?):[^/]").unwrap();
+    let mut modified_content = re_first.replace_all(&input, ";$1;;;;;");
+    let mut modified_content = re_h1.replace_all(&modified_content, ";$1;;;;;");
+    let mut modified_content = re_h4.replace_all(&modified_content, ";;;;$1;;");
+    let mut modified_content = t1.replace_all(&modified_content, "$1;$2;$3");
+    let pre = ";;;;;";
+//    let mut modified_content = pre.to_owned() + &t2.replace_all(&modified_content, "$1;$2;$3;$4\n").to_string();
+    let mut modified_content = t2.replace_all(&modified_content, "$1;$2;$3;$4"); //\n
 
-   
-    let mut modified_content = re_first.replace_all(&input, ";;;;;;$1;$2");
-    let mut modified_content = re_sub1.replace_all(&modified_content, ";;;;$1;;;\n");
-
-    let mut modified_content = re_subt.replace_all(&modified_content, ";;;;$1;;;");
-    let mut modified_content = re_tx.replace_all(&modified_content, ";;;;;;$1;$2;$3");
-    let mut modified_content = re_note_com.replace_all(&modified_content, ";;;;;;$1;$2;$3;$4");
+    let mut modified_content = t3.replace_all(&modified_content, "$1;$2");
+    let mut modified_content = t4.replace_all(&modified_content, "$1;$2");
+    let mut modified_content = t5.replace_all(&modified_content, "");
+    let mut modified_content = re_sem.replace_all(&modified_content, ";;;;$1;;");
    // let mut modified_content = re_note.replace_all(&modified_content, ";;;;;;$1;$2;$3;$4");
 
     
-    let mut modified_content = re_h5.replace_all(&modified_content, ";;;$1;;;;");
-    let mut modified_content = re_h4.replace_all(&modified_content, ";;$1;;;;;");
+  //  let mut modified_content = re_h5.replace_all(&modified_content, ";;;$1;;;;");
+  //  let mut modified_content = re_h4.replace_all(&modified_content, ";;$1;;;;;");
   //  let mut modified_content = re_tx.replace_all(&modified_content, ";;;;;;$1;$2;$3");
 
-    let mut modified_content = re_h1.replace_all(&modified_content, ";$1;;;;;;");
+    //let mut modified_content = re_h1.replace_all(&modified_content, ";$1;;;;;;");
     let output_file = "pinghook.csv";
 
    // append_to_csv(output_file, &modified_content);
@@ -121,7 +131,7 @@ fn main() -> io::Result<()> {
      //if modified_content == "" {
        // modified_content = std::borrow::Cow::Borrowed//////(modified_content2);
     //}
-let header = "id;h1;h2;h3;h4;h5;text;link;description;note\n"; //9
+let header = "id;h1;h2;h3;linktext;url;description;note;url.n;alii\n"; //9
 //println!("{}{}{}",header,modified_content,finbody);
 println!("{}",modified_content);
 let mut file = fs::File::create(output_file).unwrap();
