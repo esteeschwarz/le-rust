@@ -41,7 +41,11 @@ fn read_stdin() -> io::Result<String> {
        let mut buffer = String::new();
      // let mut buffer = io::read_to_string(io::stdin())?;
         io::stdin().read_line(&mut buffer)?;
+<<<<<<< HEAD
         path = Path::new(io::stdin().read_line(&mut buffer)?;);
+=======
+        path = Path::new(io::stdin().read_line(&mut buffer));
+>>>>>>> d90ee8527d9923624320533d4049b2904bf117ac
         buffer = path.read_into_string().unwrap();
         Ok(buffer)
     } else {
