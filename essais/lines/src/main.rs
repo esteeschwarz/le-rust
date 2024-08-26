@@ -15,6 +15,8 @@ fn hello() {
 
 use std::env;
 use std::fs;
+use std::fs::File;
+use std::fs::OpenOptions;
 use std::io::{self, Write};
 use regex::Regex;
 use input_conv::read_string;
@@ -48,7 +50,7 @@ fn read_stdin() -> io::Result<String> {
         println!("reading from file");
         // Stdin is redirected (piped input)
        // let mut buffer = io::read_to_string(io::stdin())?;
-       let pathfix = "pinghooks.md";
+       let pathfix = "13123.ada.pinghook.md";
        let path = if let Some(path) = std::env::args().nth(1) {
         path
     }   
@@ -62,7 +64,16 @@ fn read_stdin() -> io::Result<String> {
         Ok(buffer)
     }
 //}
+// fn append_to_csv(filename: &str, data:&str){
+//     let mut file = OpenOptions::new()
+//         .write(true)
+//         .append(true)
+//        // .create(true)
+//         .open(filename)?;
 
+//     io::Write(file, "{}", data)?;
+//     Ok(file)
+// }
 fn main() -> io::Result<()> {
      let input = read_stdin()?;
      //let modified_content = "[testlink](https://faz.net)";
@@ -74,24 +85,27 @@ fn main() -> io::Result<()> {
     let re_h6 = Regex::new(r"###### (.+?)<").unwrap();
     let re_p = Regex::new(r"\n(.+?)\n|\n(.+?)$").unwrap();
     let re_t = Regex::new(r"\[(.+?)\]\((.+?)\)").unwrap();
-    // Perform the replacement
-    //let mut modified_content = re_p.replace_all(&input, "<p>$1$2</p>");
-    //let mut modified_content = re_h6.replace_all(&modified_content, "<h6>$1</h6><");
-    //let mut modified_content = re_h5.replace_all(&modified_content, "<h5>$1</h5><");
-    //let mut modified_content = re_h4.replace_all(&modified_content, "<h4>$1</h4><");
-    //let mut modified_content = re_h3.replace_all(&modified_content, "<h3>$1</h3><");
-    //let mut modified_content = re_h2.replace_all(&modified_content, "<h2>$1</h2><");
-    //let mut modified_content = re_h1.replace_all(&modified_content, "<h1>$1</h1><");
+    let re_sub1 = Regex::new(r"^- (.+?):").unwrap();
+
+   
     let mut modified_content = re_t.replace_all(&input, "$1,$2");
-    let modified_content2 = "hund";
-     if modified_content == "" {
-        modified_content = std::borrow::Cow::Borrowed(modified_content2);
-    }
-    let output_file = "sample-out.txt";
-let header = "<!DOCTYPE html><html><head><meta name='viewport' content='width=device-width, initial-scale=1.0'><meta charset='utf-8' /><link rel='stylesheet' type='text/css' href='https://ada-sub.dh-index.org/school/css/style.css' /><title>14074.le-rust</title></head><body>";
-let finbody = "</body></html>";
-println!("{}{}{}",header,modified_content,finbody);
+    let output_file = "pinghook.csv";
+
+   // append_to_csv(output_file, &modified_content);
+
+   // let modified_content2 = "hund";
+     //if modified_content == "" {
+       // modified_content = std::borrow::Cow::Borrowed//////(modified_content2);
+    //}
+let header = "id,h1,h2,h3,h4,h5,text,link,\n";
+//println!("{}{}{}",header,modified_content,finbody);
 println!("{}",modified_content);
-fs::write(output_file, println(modified_content))?;
+let mut file = fs::File::create(output_file).unwrap();
+
+writeln!(file,"{}{}",header,modified_content);
+//let mut modified_content = [&header,&modified_content].concat();
+//let mut file = fs::File::create(output_file).unwrap();
+//file.write_all(modified_content.as_bytes()).unwrap();
+//fs::write(output_file, modified_content.println!())?;
     Ok(())
 }
