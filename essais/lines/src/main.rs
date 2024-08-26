@@ -18,8 +18,8 @@ use std::fs;
 use std::fs::File;
 use std::fs::OpenOptions;
 use std::io::{self, Write};
-use regex::Regex;
-//use fancy_regex::Regex;
+//use regex::Regex;
+use fancy_regex::Regex;
 
 use input_conv::read_string;
 use input_conv::read_char;
