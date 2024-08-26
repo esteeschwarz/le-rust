@@ -77,18 +77,37 @@ fn read_stdin() -> io::Result<String> {
 fn main() -> io::Result<()> {
      let input = read_stdin()?;
      //let modified_content = "[testlink](https://faz.net)";
-    let re_h1 = Regex::new(r"# ?(.+?)<").unwrap();
+    let re_h1 = Regex::new(r"# (.+)").unwrap();
     let re_h2 = Regex::new(r"## (.+?)<").unwrap();
     let re_h3 = Regex::new(r"### (.+?)<").unwrap();
-    let re_h4 = Regex::new(r"#### (.+?)<").unwrap();
-    let re_h5 = Regex::new(r"##### (.+?)<").unwrap();
+    let re_h4 = Regex::new(r"#### (.+)").unwrap();
+    let re_h5 = Regex::new(r"##### (.+)").unwrap();
     let re_h6 = Regex::new(r"###### (.+?)<").unwrap();
     let re_p = Regex::new(r"\n(.+?)\n|\n(.+?)$").unwrap();
     let re_t = Regex::new(r"\[(.+?)\]\((.+?)\)").unwrap();
-    let re_sub1 = Regex::new(r"^- (.+?):").unwrap();
+    let re_sub1 = Regex::new(r"- (.+?):[^/]").unwrap();
+    let re_subt = Regex::new(r"\t- (.+?):[^/]").unwrap();
+    let re_tx = Regex::new(r"\[(.+)\]\((http.?://.+)\)(.+)?").unwrap();
+    let re_first = Regex::new(r"#nomatch#").unwrap();
+    let re_note = Regex::new(r"\[(.+)\]\((http.?://.+)\) (#note: (.+)#)?").unwrap();
+    
+    //let re_h1 = Regex::new(r"- (.+?):[^/]").unwrap();
+    //let re_h1 = Regex::new(r"- (.+?):[^/]").unwrap();
 
    
-    let mut modified_content = re_t.replace_all(&input, "$1,$2");
+    let mut modified_content = re_first.replace_all(&input, ";;;;;;$1;$2");
+    let mut modified_content = re_sub1.replace_all(&modified_content, ";;;;$1;;;\n");
+
+    let mut modified_content = re_subt.replace_all(&modified_content, ";;;;$1;;;");
+    let mut modified_content = re_note.replace_all(&modified_content, ";;;;;;$1;$2;;$3");
+
+    let mut modified_content = re_tx.replace_all(&modified_content, ";;;;;;$1;$2;$3");
+    
+    let mut modified_content = re_h5.replace_all(&modified_content, ";;;$1;;;;");
+    let mut modified_content = re_h4.replace_all(&modified_content, ";;$1;;;;;");
+    let mut modified_content = re_tx.replace_all(&modified_content, ";;;;;;$1;$2;$3");
+
+    let mut modified_content = re_h1.replace_all(&modified_content, ";$1;;;;;;");
     let output_file = "pinghook.csv";
 
    // append_to_csv(output_file, &modified_content);
@@ -97,7 +116,7 @@ fn main() -> io::Result<()> {
      //if modified_content == "" {
        // modified_content = std::borrow::Cow::Borrowed//////(modified_content2);
     //}
-let header = "id,h1,h2,h3,h4,h5,text,link,\n";
+let header = "id;h1;h2;h3;h4;h5;text;link;description;note\n"; //9
 //println!("{}{}{}",header,modified_content,finbody);
 println!("{}",modified_content);
 let mut file = fs::File::create(output_file).unwrap();
