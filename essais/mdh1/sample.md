@@ -1,4 +1,3 @@
-# 15121.silver.test.snc
+# 15121.test
 outside source snc.
 we believe this is a test. the log id is `110`.
-nothing new in here.

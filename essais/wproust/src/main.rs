@@ -25,7 +25,7 @@ struct Args {
     password: Option<String>,
 
     /// WordPress XML-RPC URL (overrides TOML config)
-    #[clap(short = 'b', long, default_value="http://mini12/ap/wpost/xmlrpc.php")]
+    #[clap(short = 'b', long)]
     blogurl: Option<String>,
 
     /// Path to the Markdown file
@@ -58,8 +58,38 @@ fn markdown_to_html(markdown: &str) -> String {
     html::push_html(&mut html_output, parser);
     html_output
 }
-
+/// Extracts the first level 1 heading (`#`) from the Markdown content.
 fn extract_first_heading(markdown: &str) -> Option<String> {
+    for line in markdown.lines() {
+        if line.starts_with("# ") {
+            return Some(line.trim_start_matches("# ").trim().to_string());
+        }
+    }
+    None
+}
+/// Removes the first level 1 heading from the Markdown content.
+fn remove_first_h1(markdown: &str) -> String {
+    let mut lines = markdown.lines();
+    let mut result = String::new();
+
+    // Skip the first line if it's a level 1 heading
+    if let Some(first_line) = lines.next() {
+        if !first_line.starts_with("# ") {
+            result.push_str(first_line);
+            result.push('\n');
+        }
+    }
+
+    // Append the remaining lines
+    for line in lines {
+        result.push_str(line);
+        result.push('\n');
+    }
+
+    result
+}
+
+fn extract_first_heading_dep(markdown: &str) -> Option<String> {
     let mut parser = MdParser::new(markdown);
     let title = "15121.2.silver.snc";
     for event in parser {
@@ -180,23 +210,30 @@ fn main() {
     // Read the Markdown file
     let markdown_content = fs::read_to_string(&args.markdownfile).expect("Failed to read Markdown file");
     println!("5");
+
+    // Remove the first level 1 heading from the Markdown content
+    let markdown_without_h1 = remove_first_h1(&markdown_content);
+
+    // Convert the modified Markdown content to HTML
+    let html_content = markdown_to_html(&markdown_without_h1);
+
     // Convert Markdown to HTML
-    let html_content = markdown_to_html(&markdown_content);
+    // let html_content = markdown_to_html(&markdown_content);
     println!("6");
     // Handle different methods
     match args.method.as_str() {
-        "metaWeblog.editPost" => {
+        "editPost" => {
             let postid = config.and_then(|c| Some(c.wordpress.postid))
                 .unwrap_or_else(|| "2000".to_string());
             let post_title = extract_first_heading(&markdown_content)
-                .unwrap_or_else(|| "15121.silver.snc.test".to_string());
+                .unwrap_or_else(|| "untitled-x".to_string());
 
             match edit_post(&blogurl,&postid, &username, &password, &post_title, &html_content,true) {
                 Ok(response) => println!("Post updated successfully! Response: {}", response),
                 Err(e) => eprintln!("Failed to update post: {}", e),
             }
         }
-        "metaWeblog.newPost" => {
+        "newPost" => {
             let post_title = extract_first_heading(&markdown_content)
                 .unwrap_or_else(|| "15121.silver.snc.test".to_string());
 
