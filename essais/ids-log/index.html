@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Entry App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="App">
+        <h1>Database Entry App</h1>
+        <div class="view-switcher">
+            <button onclick="showInputForm()">Input Form</button>
+            <button onclick="showDataTable()">View Data</button>
+        </div>
+
+        <div id="input-form">
+            <form onsubmit="saveData(event)">
+                <div><label>Field 1: <input type="text" name="field1" required></label></div>
+                <div><label>Field 2: <input type="text" name="field2" required></label></div>
+                <div><label>Field 3: <input type="text" name="field3" required></label></div>
+                <div><label>Field 4: <input type="text" name="field4" required></label></div>
+                <div><label>Field 5: <input type="text" name="field5" required></label></div>
+                <div><label>Field 6: <input type="text" name="field6" required></label></div>
+                <div><label>Field 7: <input type="text" name="field7" required></label></div>
+                <div><label>Field 8: <input type="text" name="field8" required></label></div>
+                <div><label>Field 9: <input type="text" name="field9" required></label></div>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+
+        <div id="data-table" style="display: none;">
+            <h2>Stored Data</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Field 1</th>
+                        <th>Field 2</th>
+                        <th>Field 3</th>
+                        <th>Field 4</th>
+                        <th>Field 5</th>
+                        <th>Field 6</th>
+                        <th>Field 7</th>
+                        <th>Field 8</th>
+                        <th>Field 9</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody id="data-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
