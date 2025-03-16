@@ -125,7 +125,7 @@ async fn main() -> std::io::Result<()> {
             .route("/save", web::post().to(save_data))
             .route("/data", web::get().to(fetch_data))
     })
-    .bind("127.0.0.1:5000")?
+    .bind("127.0.0.1:5001")?
     .run()
     .await
 }
