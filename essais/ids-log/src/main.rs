@@ -1,3 +1,4 @@
+use actix_cors::Cors; // Import the CORS middleware
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use rusqlite::{params, Connection};
 use serde::{Deserialize, Serialize};
@@ -52,6 +53,11 @@ fn init_db(conn: &Connection) -> rusqlite::Result<()> {
         [],
     )?;
     Ok(())
+}
+
+// Test endpoint to check if the server is running
+async fn test() -> impl Responder {
+    HttpResponse::Ok().body("Server is running!")
 }
 
 // Save data to the database
@@ -118,14 +124,42 @@ async fn main() -> std::io::Result<()> {
     // Wrap the database connection in a Mutex for thread safety
     let db = web::Data::new(Mutex::new(conn));
 
-    // Start the Actix Web server
-    HttpServer::new(move || {
-        App::new()
-            .app_data(db.clone())
-            .route("/save", web::post().to(save_data))
-            .route("/data", web::get().to(fetch_data))
-    })
-    .bind("127.0.0.1:5001")?
-    .run()
-    .await
+    // // Start the Actix Web server
+    // HttpServer::new(move || {
+    //     // Configure CORS
+    //     let cors = Cors::default()
+    //         .allowed_origin("http://localhost:5000/save") // Allow requests from this origin
+    //         .allowed_origin("http://localhost:5000/data") // Allow requests from this origin
+
+    //         .allowed_methods(vec!["GET", "POST"]) // Allow specific HTTP methods
+    //         .allowed_headers(vec!["Content-Type"]) // Allow specific headers
+    //         .max_age(3600); // Cache preflight response for 1 hour
+
+    //     App::new()
+    //         .wrap(cors) // Apply CORS middleware
+    //         .app_data(db.clone())
+    //         .route("/test", web::get().to(test))
+    //         .route("/save", web::post().to(save_data))
+    //         .route("/data", web::get().to(fetch_data))
+    // })
+    // .bind("127.0.0.1:5000")?
+    // .run()
+    // .await
+//}
+
+  // Start the Actix Web server
+  HttpServer::new(move || {
+    // Configure CORS to allow all origins
+    let cors = Cors::permissive(); // Allow all origins, methods, and headers
+
+    App::new()
+        .wrap(cors) // Apply CORS middleware
+        .app_data(db.clone())
+        .route("/test", web::get().to(test))
+        .route("/save", web::post().to(save_data))
+        .route("/data", web::get().to(fetch_data))
+})
+.bind("127.0.0.1:5000")?
+.run()
+.await
 }
