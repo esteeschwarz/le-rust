@@ -110,7 +110,7 @@ async fn fetch_data(db: web::Data<Mutex<Connection>>) -> impl Responder {
             //     field9: row.get(9)?,
             //     timestamp: row.get(10)?,
             // })
-            .query_map([], |row| {
+           // .query_map([], |row| {
                 // Fetch the UTC timestamp from the database
                 let utc_timestamp: String = row.get(10)?;
     
@@ -136,7 +136,7 @@ async fn fetch_data(db: web::Data<Mutex<Connection>>) -> impl Responder {
                     timestamp: cet_time.to_rfc3339(), // Store the CET timestamp as a string
                 })
             })
-        })
+       // })
         .unwrap()
         .collect::<Result<Vec<Entry>, _>>()
         .unwrap();
