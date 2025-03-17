@@ -57,7 +57,7 @@ fn init_db(conn: &Connection) -> rusqlite::Result<()> {
 
 // Test endpoint to check if the server is running
 async fn test() -> impl Responder {
-    HttpResponse::Ok().body("Server is running!")
+    HttpResponse::Ok().body("Server is running!\n")
 }
 
 // Save data to the database
