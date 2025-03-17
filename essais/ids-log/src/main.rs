@@ -150,25 +150,25 @@ async fn main() -> std::io::Result<()> {
   // Start the Actix Web server
   HttpServer::new(move || {
     // Configure CORS to allow all origins
-    // let cors = Cors::permissive(); // Allow all origins, methods, and headers
+    let cors = Cors::permissive(); // Allow all origins, methods, and headers
 // Configure CORS
-        let cors = Cors::default()
-        //     .allowed_origin(vec![
-        //     "http://localhost:5000/save", // Allow requests from localhost
-        //     "http://localhost:5000/data",
-        //     "http://mini12:5000/save",
-        //     "http://mini12:5000/data",
-        //     "http://mini12:5000/test" // Allow requests from www.example.com
-        // ])
-            .allowed_methods(vec!["GET", "POST", "OPTIONS"]) // Allow specific HTTP methods
-            // .allowed_headers(vec!["Content-Type"]) // Allow specific headers
-            .supports_credentials() // Allow credentials (if needed)
-            .max_age(3600) // Cache preflight response for 1 hour
-            .allowed_origin("http://localhost:5000/save") // Allow requests from this origin
-            .allowed_origin("http://localhost:5000/data") // Allow requests from this origin
-            .allowed_origin("http://mini12:5000/save") // Allow requests from this origin
-            .allowed_origin("http://mini12:5000/data") // Allow requests from this origin
-            .allowed_origin("http://mini12:5000/test"); // Allow requests from this origin
+        // let cors = Cors::default()
+        // //     .allowed_origin(vec![
+        // //     "http://localhost:5000/save", // Allow requests from localhost
+        // //     "http://localhost:5000/data",
+        // //     "http://mini12:5000/save",
+        // //     "http://mini12:5000/data",
+        // //     "http://mini12:5000/test" // Allow requests from www.example.com
+        // // ])
+        //     .allowed_methods(vec!["GET", "POST", "OPTIONS"]) // Allow specific HTTP methods
+        //     // .allowed_headers(vec!["Content-Type"]) // Allow specific headers
+        //     .supports_credentials() // Allow credentials (if needed)
+        //     .max_age(3600) // Cache preflight response for 1 hour
+        //     .allowed_origin("http://localhost:5000/save") // Allow requests from this origin
+        //     .allowed_origin("http://localhost:5000/data") // Allow requests from this origin
+        //     .allowed_origin("http://mini12:5000/save") // Allow requests from this origin
+        //     .allowed_origin("http://mini12:5000/data") // Allow requests from this origin
+        //     .allowed_origin("http://mini12:5000/test"); // Allow requests from this origin
 
     App::new()
         .wrap(cors) // Apply CORS middleware
