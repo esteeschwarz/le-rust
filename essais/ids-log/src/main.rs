@@ -146,7 +146,7 @@ async fn fetch_data(db: web::Data<Mutex<Connection>>) -> impl Responder {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // Initialize SQLite database
-    let conn = Connection::open("database.db").unwrap();
+    let conn = Connection::open("../../../../idsdatabase.db").unwrap();
     init_db(&conn).unwrap();
 
     // Wrap the database connection in a Mutex for thread safety
