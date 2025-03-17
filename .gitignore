@@ -3,3 +3,4 @@
 **/.html
 .html
 **/*.lock
+**/*.db
