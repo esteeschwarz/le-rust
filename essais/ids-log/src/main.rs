@@ -165,7 +165,7 @@ async fn main() -> std::io::Result<()> {
         .route("/save", web::post().to(save_data))
         .route("/data", web::get().to(fetch_data))
 })
-.bind("mini12:5000")?
+.bind("localhost:5000")?
 .run()
 .await
 }
