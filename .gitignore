@@ -1,6 +1,6 @@
 **/target
 **/.Rhistory
-**/.html
-.html
-**/*.lock
-**/*.db
+#**/.html
+#.html
+**/Cargo.lock
+**/database.db
