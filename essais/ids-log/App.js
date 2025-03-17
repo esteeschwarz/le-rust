@@ -15,8 +15,9 @@ async function saveData(event) {
     const data = Object.fromEntries(formData.entries());
 
     try {
-        const response = await fetch("http://mini12:4173/save", {
-            method: "POST",
+        // const response = await fetch("http://mini12:4173/save", {
+        const response = await fetch("/rserver/save", {
+                method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         });
@@ -33,7 +34,9 @@ async function saveData(event) {
 
 async function fetchData() {
     try {
-        const response = await fetch("http://mini12:4173/data");
+        // const response = await fetch("http://mini12:4173/data");
+        const response = await fetch("/rserver/data");
+        
         if (!response.ok) {
             throw new Error("Failed to fetch data");
         }
