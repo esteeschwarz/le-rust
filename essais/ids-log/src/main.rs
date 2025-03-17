@@ -1,5 +1,5 @@
 use actix_cors::Cors; // Import the CORS middleware
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{web, App, HttpResponse, HttpServer, Responder, http};
 use rusqlite::{params, Connection};
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
@@ -119,7 +119,7 @@ async fn fetch_data(db: web::Data<Mutex<Connection>>) -> impl Responder {
 
 async fn handle_options() -> impl Responder {
     HttpResponse::Ok()
-        .header("Access-Control-Allow-Origin", "http://mini12")
+        .header("Access-Control-Allow-Origin", "localhost")
         .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         .header("Access-Control-Allow-Headers", "Content-Type")
         .header("Access-Control-Allow-Credentials", "true")
@@ -131,7 +131,7 @@ async fn handle_options() -> impl Responder {
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         let cors = Cors::default()
-            .allowed_origin("http://mini12")
+            .allowed_origin("localhost")
             .allowed_methods(vec!["GET", "POST", "OPTIONS"])
             .allowed_headers(vec!["Content-Type"])
             .supports_credentials()
@@ -139,13 +139,20 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .wrap(cors)
-            .route("/test", web::get().to(|| HttpResponse::Ok().body("Server is running!")))
+            // .route("/test", web::get().to(|| HttpResponse::Ok().body("Server is running!")))
+            .route("/test", web::get().to(test))
             .route("/save", web::post().to(save_data))
             .route("/data", web::get().to(fetch_data))
-            .route("/save", web::options().to(handle_options)) // Explicitly handle OPTIONS
-            .route("/data", web::options().to(handle_options)) // Explicitly handle OPTIONS
+            // .route("/save", web::options().to(handle_options)) // Explicitly handle OPTIONS
+            // .route("/data", web::options().to(handle_options)) // Explicitly handle OPTIONS
+            // .route("/save", http::Method::to(handle_options))
+            // .route("/data", http::Method::to(handle_options))
+
+            // .route("/data", web::method(Method::OPTIONS).to(handle_options))
+            // use           actix_web::http::Method
+
     })
-    .bind("0.0.0.0:5000")?
+    .bind("0.0.0.0:4173")?
     .run()
     .await
 }
