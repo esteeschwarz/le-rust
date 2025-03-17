@@ -130,12 +130,13 @@ async fn handle_options() -> impl Responder {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
-        let cors = Cors::default()
-            .allowed_origin("localhost")
-            .allowed_methods(vec!["GET", "POST", "OPTIONS"])
-            .allowed_headers(vec!["Content-Type"])
-            .supports_credentials()
-            .max_age(3600);
+        // let cors = Cors::default()
+        //     .allowed_origin("localhost")
+        //     .allowed_methods(vec!["GET", "POST", "OPTIONS"])
+        //     .allowed_headers(vec!["Content-Type"])
+        //     .supports_credentials()
+        //     .max_age(3600);
+        let cors = Cors::permissive(); // Allow all origins, methods, and headers
 
         App::new()
             .wrap(cors)
