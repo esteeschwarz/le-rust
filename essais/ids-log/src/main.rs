@@ -117,15 +117,15 @@ async fn fetch_data(db: web::Data<Mutex<Connection>>) -> impl Responder {
 
 
 
-async fn handle_options() -> impl Responder {
-    HttpResponse::Ok()
-        .header("Access-Control-Allow-Origin", "localhost")
-        .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        .header("Access-Control-Allow-Headers", "Content-Type")
-        .header("Access-Control-Allow-Credentials", "true")
-        .header("Vary", "Origin") // Disable caching
-        .finish()
-}
+// async fn handle_options() -> impl Responder {
+//     HttpResponse::Ok()
+//         .header("Access-Control-Allow-Origin", "localhost")
+//         .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+//         .header("Access-Control-Allow-Headers", "Content-Type")
+//         .header("Access-Control-Allow-Credentials", "true")
+//         .header("Vary", "Origin") // Disable caching
+//         .finish()
+// }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -141,9 +141,9 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(cors)
             // .route("/test", web::get().to(|| HttpResponse::Ok().body("Server is running!")))
-            .route("/test", web::get().to(test))
-            .route("/save", web::post().to(save_data))
-            .route("/data", web::get().to(fetch_data))
+            .route("/rserver/test", web::get().to(test))
+            .route("/rserver/save", web::post().to(save_data))
+            .route("/rserver/data", web::get().to(fetch_data))
             // .route("/save", web::options().to(handle_options)) // Explicitly handle OPTIONS
             // .route("/data", web::options().to(handle_options)) // Explicitly handle OPTIONS
             // .route("/save", http::Method::to(handle_options))
