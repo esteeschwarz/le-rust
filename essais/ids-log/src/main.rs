@@ -156,7 +156,7 @@ async fn main() -> std::io::Result<()> {
             .allowed_origin("http://localhost:5000/save") // Allow requests from this origin
             .allowed_origin("http://localhost:5000/data") // Allow requests from this origin
             .allowed_origin("http://mini12:5000/save") // Allow requests from this origin
-            .allowed_origin("http://mini12:5000/data") // Allow requests from this origin
+            .allowed_origin("http://mini12:5000/data"); // Allow requests from this origin
 
     App::new()
         .wrap(cors) // Apply CORS middleware
