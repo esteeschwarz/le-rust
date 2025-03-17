@@ -153,7 +153,7 @@ async fn main() -> std::io::Result<()> {
     // let cors = Cors::permissive(); // Allow all origins, methods, and headers
 // Configure CORS
         let cors = Cors::default()
-            .allowed_origins(vec![
+            .allowed_origin(vec![
             "http://localhost:5000/save", // Allow requests from localhost
             "http://localhost:5000/data",
             "http://mini12:5000/save",
