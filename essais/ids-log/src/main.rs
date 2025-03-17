@@ -150,7 +150,13 @@ async fn main() -> std::io::Result<()> {
   // Start the Actix Web server
   HttpServer::new(move || {
     // Configure CORS to allow all origins
-    let cors = Cors::permissive(); // Allow all origins, methods, and headers
+    // let cors = Cors::permissive(); // Allow all origins, methods, and headers
+// Configure CORS
+        let cors = Cors::default()
+            .allowed_origin("http://localhost:5000/save") // Allow requests from this origin
+            .allowed_origin("http://localhost:5000/data") // Allow requests from this origin
+            .allowed_origin("http://mini12:5000/save") // Allow requests from this origin
+            .allowed_origin("http://mini12:5000/data") // Allow requests from this origin
 
     App::new()
         .wrap(cors) // Apply CORS middleware
