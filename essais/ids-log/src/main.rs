@@ -115,70 +115,105 @@ async fn fetch_data(db: web::Data<Mutex<Connection>>) -> impl Responder {
     HttpResponse::Ok().json(entries)
 }
 
+
+
+async fn handle_options() -> impl Responder {
+    HttpResponse::Ok()
+        .header("Access-Control-Allow-Origin", "http://mini12")
+        .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        .header("Access-Control-Allow-Headers", "Content-Type")
+        .header("Access-Control-Allow-Credentials", "true")
+        .header("Vary", "Origin") // Disable caching
+        .finish()
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    // Initialize SQLite database
-    let conn = Connection::open("database.db").unwrap();
-    init_db(&conn).unwrap();
+    HttpServer::new(|| {
+        let cors = Cors::default()
+            .allowed_origin("http://mini12")
+            .allowed_methods(vec!["GET", "POST", "OPTIONS"])
+            .allowed_headers(vec!["Content-Type"])
+            .supports_credentials()
+            .max_age(3600);
 
-    // Wrap the database connection in a Mutex for thread safety
-    let db = web::Data::new(Mutex::new(conn));
-
-    // // Start the Actix Web server
-    // HttpServer::new(move || {
-    //     // Configure CORS
-    //     let cors = Cors::default()
-    //         .allowed_origin("http://localhost:5000/save") // Allow requests from this origin
-    //         .allowed_origin("http://localhost:5000/data") // Allow requests from this origin
-
-    //         .allowed_methods(vec!["GET", "POST"]) // Allow specific HTTP methods
-    //         .allowed_headers(vec!["Content-Type"]) // Allow specific headers
-    //         .max_age(3600); // Cache preflight response for 1 hour
-
-    //     App::new()
-    //         .wrap(cors) // Apply CORS middleware
-    //         .app_data(db.clone())
-    //         .route("/test", web::get().to(test))
-    //         .route("/save", web::post().to(save_data))
-    //         .route("/data", web::get().to(fetch_data))
-    // })
-    // .bind("127.0.0.1:5000")?
-    // .run()
-    // .await
-//}
-
-  // Start the Actix Web server
-  HttpServer::new(move || {
-    // Configure CORS to allow all origins
-    let cors = Cors::permissive(); // Allow all origins, methods, and headers
-// Configure CORS
-        // let cors = Cors::default()
-        // //     .allowed_origin(vec![
-        // //     "http://localhost:5000/save", // Allow requests from localhost
-        // //     "http://localhost:5000/data",
-        // //     "http://mini12:5000/save",
-        // //     "http://mini12:5000/data",
-        // //     "http://mini12:5000/test" // Allow requests from www.example.com
-        // // ])
-        //     .allowed_methods(vec!["GET", "POST", "OPTIONS"]) // Allow specific HTTP methods
-        //     // .allowed_headers(vec!["Content-Type"]) // Allow specific headers
-        //     .supports_credentials() // Allow credentials (if needed)
-        //     .max_age(3600) // Cache preflight response for 1 hour
-        //     .allowed_origin("http://localhost:5000/save") // Allow requests from this origin
-        //     .allowed_origin("http://localhost:5000/data") // Allow requests from this origin
-        //     .allowed_origin("http://mini12:5000/save") // Allow requests from this origin
-        //     .allowed_origin("http://mini12:5000/data") // Allow requests from this origin
-        //     .allowed_origin("http://mini12:5000/test"); // Allow requests from this origin
-
-    App::new()
-        .wrap(cors) // Apply CORS middleware
-        .app_data(db.clone())
-        .route("/test", web::get().to(test))
-        .route("/save", web::post().to(save_data))
-        .route("/data", web::get().to(fetch_data))
-})
-// .bind("localhost:5000")?
-.bind("mini12:5000")?
-.run()
-.await
+        App::new()
+            .wrap(cors)
+            .route("/test", web::get().to(|| HttpResponse::Ok().body("Server is running!")))
+            .route("/save", web::post().to(save_data))
+            .route("/data", web::get().to(fetch_data))
+            .route("/save", web::options().to(handle_options)) // Explicitly handle OPTIONS
+            .route("/data", web::options().to(handle_options)) // Explicitly handle OPTIONS
+    })
+    .bind("0.0.0.0:5000")?
+    .run()
+    .await
 }
+
+// #[actix_web::main]
+// async fn main() -> std::io::Result<()> {
+//     // Initialize SQLite database
+//     let conn = Connection::open("database.db").unwrap();
+//     init_db(&conn).unwrap();
+
+//     // Wrap the database connection in a Mutex for thread safety
+//     let db = web::Data::new(Mutex::new(conn));
+
+//     // // Start the Actix Web server
+//     // HttpServer::new(move || {
+//     //     // Configure CORS
+//     //     let cors = Cors::default()
+//     //         .allowed_origin("http://localhost:5000/save") // Allow requests from this origin
+//     //         .allowed_origin("http://localhost:5000/data") // Allow requests from this origin
+
+//     //         .allowed_methods(vec!["GET", "POST"]) // Allow specific HTTP methods
+//     //         .allowed_headers(vec!["Content-Type"]) // Allow specific headers
+//     //         .max_age(3600); // Cache preflight response for 1 hour
+
+//     //     App::new()
+//     //         .wrap(cors) // Apply CORS middleware
+//     //         .app_data(db.clone())
+//     //         .route("/test", web::get().to(test))
+//     //         .route("/save", web::post().to(save_data))
+//     //         .route("/data", web::get().to(fetch_data))
+//     // })
+//     // .bind("127.0.0.1:5000")?
+//     // .run()
+//     // .await
+// //}
+
+//   // Start the Actix Web server
+//   HttpServer::new(move || {
+//     // Configure CORS to allow all origins
+//     let cors = Cors::permissive(); // Allow all origins, methods, and headers
+// // Configure CORS
+//         // let cors = Cors::default()
+//         // //     .allowed_origin(vec![
+//         // //     "http://localhost:5000/save", // Allow requests from localhost
+//         // //     "http://localhost:5000/data",
+//         // //     "http://mini12:5000/save",
+//         // //     "http://mini12:5000/data",
+//         // //     "http://mini12:5000/test" // Allow requests from www.example.com
+//         // // ])
+//         //     .allowed_methods(vec!["GET", "POST", "OPTIONS"]) // Allow specific HTTP methods
+//         //     // .allowed_headers(vec!["Content-Type"]) // Allow specific headers
+//         //     .supports_credentials() // Allow credentials (if needed)
+//         //     .max_age(3600) // Cache preflight response for 1 hour
+//         //     .allowed_origin("http://localhost:5000/save") // Allow requests from this origin
+//         //     .allowed_origin("http://localhost:5000/data") // Allow requests from this origin
+//         //     .allowed_origin("http://mini12:5000/save") // Allow requests from this origin
+//         //     .allowed_origin("http://mini12:5000/data") // Allow requests from this origin
+//         //     .allowed_origin("http://mini12:5000/test"); // Allow requests from this origin
+
+//     App::new()
+//         .wrap(cors) // Apply CORS middleware
+//         .app_data(db.clone())
+//         .route("/test", web::get().to(test))
+//         .route("/save", web::post().to(save_data))
+//         .route("/data", web::get().to(fetch_data))
+// })
+// // .bind("localhost:5000")?
+// .bind("mini12:5000")?
+// .run()
+// .await
+// }
