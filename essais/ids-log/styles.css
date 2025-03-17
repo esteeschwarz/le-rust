@@ -1,11 +1,11 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
-    margin: 0;
+    margin: 30;
     padding: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
+    /*align-items: center;*/
     height: 100vh;
 }
 
@@ -16,6 +16,7 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 80%;
     max-width: 800px;
+    display: table;
 }
 
 h1 {
@@ -58,6 +59,7 @@ input {
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size:1em;
 }
 
 button[type="submit"] {
@@ -77,6 +79,7 @@ button[type="submit"]:hover {
 .data-table {
     width: 100%;
     overflow-x: auto;
+    font-family: courier;
 }
 
 table {
@@ -94,6 +97,6 @@ th, td {
 th {
     background-color: #f4f4f4;
 }
-#data-table {
+/*#data-table {
     font-family: courier;
-}
+}*/

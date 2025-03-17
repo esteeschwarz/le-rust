@@ -3,29 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Database Entry App</title>
+    <title>IDS log</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="App">
-        <h1>Database Entry App</h1>
+        <h1>logbuch der trojer</h1>
         <div class="view-switcher">
-            <button onclick="showInputForm()">Input Form</button>
-            <button onclick="showDataTable()">View Data</button>
+            <button onclick="showInputForm()">input data</button>
+            <button onclick="showDataTable()">view log</button>
         </div>
 
         <div id="input-form">
             <form onsubmit="saveData(event)">
-                <div><label>Field 1: <input type="text" name="field1" required></label></div>
-                <div><label>Field 2: <input type="text" name="field2" required></label></div>
-                <div><label>Field 3: <input type="text" name="field3" required></label></div>
-                <div><label>Field 4: <input type="text" name="field4" required></label></div>
-                <div><label>Field 5: <input type="text" name="field5" required></label></div>
-                <div><label>Field 6: <input type="text" name="field6" required></label></div>
-                <div><label>Field 7: <input type="text" name="field7" required></label></div>
-                <div><label>Field 8: <input type="text" name="field8" required></label></div>
-                <div><label>Field 9: <input type="text" name="field9" required></label></div>
-                <button type="submit">Save</button>
+                <div><label>temp: <input type="text" name="field1" ></label></div>
+                <div><label>atmo: <input type="text" name="field2" ></label></div>
+                <div><label>plant: <input type="text" name="field3" ></label></div>
+                <div><label>work: <input type="text" name="field4" ></label></div>
+                <div><label>common: <input type="text" name="field5" ></label></div>
+                <div><label>tech: <input type="text" name="field6" ></label></div>
+                <div><label>read: <input type="text" name="field7" ></label></div>
+                <div><label>polis: <input type="text" name="field8" ></label></div>
+                <div><label>wtf: <input type="text" name="field9" ></label></div>
+                <button type="submit">commit</button>
             </form>
         </div>
 
