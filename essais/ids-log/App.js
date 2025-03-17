@@ -18,7 +18,8 @@ async function saveData(event) {
         // const response = await fetch("http://localhost:4173/save", {
             const response = await fetch("/rserver/save",{
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            // headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "text/plain" },
             body: JSON.stringify(data),
         });
         if (!response.ok) {
