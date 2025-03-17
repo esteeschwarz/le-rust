@@ -15,11 +15,9 @@ async function saveData(event) {
     const data = Object.fromEntries(formData.entries());
 
     try {
-        // const response = await fetch("http://localhost:4173/save", {
-            const response = await fetch("/rserver/save",{
+        const response = await fetch("http://localhost/rserver/save", {
             method: "POST",
-            // headers: { "Content-Type": "application/json" },
-            headers: { "Content-Type": "text/plain" },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         });
         if (!response.ok) {
@@ -35,8 +33,7 @@ async function saveData(event) {
 
 async function fetchData() {
     try {
-        // const response = await fetch("http://localhost:4173/data");
-        const response = await fetch("/rserver/data");
+        const response = await fetch("http://localhost/rserver/data");
         if (!response.ok) {
             throw new Error("Failed to fetch data");
         }
