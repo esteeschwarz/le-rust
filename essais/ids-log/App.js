@@ -1,14 +1,23 @@
 function showInputForm() {
+    document.getElementById("App").style.display = "block";
     document.getElementById("input-form").style.display = "block";
     document.getElementById("data-table").style.display = "none";
+    document.getElementById("login").style.display = "none";
+
 }
 
 function showDataTable() {
+    document.getElementById("App").style.display = "block";
     document.getElementById("input-form").style.display = "none";
+    document.getElementById("login").style.display = "none";
     document.getElementById("data-table").style.display = "block";
     fetchData();
 }
-
+function showLogin() {
+    document.getElementById("App").style.display = "none";
+    document.getElementById("login").style.display = "block";
+    fetchData();
+}
 async function saveData(event) {
     event.preventDefault();
     const formData = new FormData(event.target);

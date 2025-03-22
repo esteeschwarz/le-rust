@@ -5,66 +5,6 @@ use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
 use chrono::{Local, DateTime, FixedOffset};
 
-/// wt login
-//use actix_web::{web, HttpResponse, Responder};
-//use rusqlite::{params, Connection};
-//use serde::{Deserialize, Serialize};
-//use std::sync::Mutex;
-
-#[derive(Serialize, Deserialize)]
-struct LoginRequest {
-    table_name: String,
-    password: String,
-}
-
-async fn login(
-    login_data: web::Json<LoginRequest>,
-    db: web::Data<Mutex<Connection>>,
-) -> impl Responder {
-    let conn = db.lock().unwrap();
-    let table_name = &login_data.table_name;
-    let password = &login_data.password;
-
-    match check_credentials(&conn, table_name, password) {
-        Ok(true) => HttpResponse::Ok().body("Login successful!"),
-        Ok(false) => HttpResponse::Unauthorized().body("Invalid credentials. Create new table?"),
-        Err(_) => HttpResponse::InternalServerError().body("Database error"),
-    }
-}
-
-
-async fn create_table_endpoint(
-    login_data: web::Json<LoginRequest>,
-    db: web::Data<Mutex<Connection>>,
-) -> impl Responder {
-    let conn = db.lock().unwrap();
-    let table_name = &login_data.table_name;
-    let password = &login_data.password;
-
-    match create_table(&conn, table_name, password) {
-        Ok(_) => HttpResponse::Ok().body("Table created successfully!"),
-        Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
-    }
-}
-
-// #[actix_web::main]
-// async fn main() -> std::io::Result<()> {
-//     let conn = Connection::open("main.db").unwrap();
-//     init_db(&conn).unwrap();
-
-//     let db = web::Data::new(Mutex::new(conn));
-
-//     HttpServer::new(move || {
-//         App::new()
-//             .app_data(db.clone())
-//             .route("/login", web::post().to(login))
-//             .route("/create_db", web::post().to(create_db))
-//     })
-//     .bind("127.0.0.1:5000")?
-//     .run()
-//     .await
-// }
-/// 
 
 // Define the structure of a database entry
 #[derive(Serialize, Deserialize)]
@@ -96,80 +36,8 @@ struct FormData {
     field9: String,
 }
 
-fn init_db(conn: &Connection) -> rusqlite::Result<()> {
-    // Create the meta table
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS meta (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            table_name TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL
-        )",
-        [],
-    )?;
-
-    // Create a default table (optional)
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS default_table (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            field1 TEXT,
-            field2 TEXT,
-            field3 TEXT,
-            field4 TEXT,
-            field5 TEXT,
-            field6 TEXT,
-            field7 TEXT,
-            field8 TEXT,
-            field9 TEXT,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-        )",
-        [],
-    )?;
-
-    Ok(())
-}    fn check_credentials(conn: &Connection, table_name: &str, password: &str) -> rusqlite::Result<bool> {
-        let mut stmt = conn.prepare("SELECT password FROM meta WHERE table_name = ?1")?;
-        let mut rows = stmt.query(params![table_name])?;
-    
-        if let Some(row) = rows.next()? {
-            let stored_password: String = row.get(0)?;
-            Ok(stored_password == password)
-        } else {
-            Ok(false)
-        }
-    }
-    fn create_table(conn: &Connection, table_name: &str, password: &str) -> rusqlite::Result<()> {
-        // Add the new table to the meta table
-        conn.execute(
-            "INSERT INTO meta (table_name, password) VALUES (?1, ?2)",
-            params![table_name, password],
-        )?;
-    
-        // Create a new table for the database
-        conn.execute(
-            &format!(
-                "CREATE TABLE IF NOT EXISTS {} (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    field1 TEXT,
-                    field2 TEXT,
-                    field3 TEXT,
-                    field4 TEXT,
-                    field5 TEXT,
-                    field6 TEXT,
-                    field7 TEXT,
-                    field8 TEXT,
-                    field9 TEXT,
-                    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-                )",
-                table_name
-            ),
-            [],
-        )?;
-    
-        Ok(())
-    }
-/////////////////////////////////
 // Initialize the SQLite database
-fn init_db_dep(conn: &Connection) -> rusqlite::Result<()> {
+fn init_db(conn: &Connection) -> rusqlite::Result<()> {
     conn.execute(
         "CREATE TABLE IF NOT EXISTS entries (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -197,13 +65,11 @@ async fn test() -> impl Responder {
 // Save data to the database
 async fn save_data(
     form_data: web::Json<FormData>,
-    login_data: web::Json<LoginRequest>,
-    db: web::Data<Mutex<Connection>>
+    db: web::Data<Mutex<Connection>>,
 ) -> impl Responder {
     let conn = db.lock().unwrap();
-    let table_name = &login_data.table_name;
-    let query = &format!("INSERT INTO {} (field1, field2, field3, field4, field5, field6, field7, field8, field9)
-                 VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",table_name);
+    let query = "INSERT INTO entries (field1, field2, field3, field4, field5, field6, field7, field8, field9)
+                 VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)";
     match conn.execute(
         query,
         params![
@@ -224,14 +90,10 @@ async fn save_data(
 }
 
 // Fetch all data from the database
-async fn fetch_data(
-    db: web::Data<Mutex<Connection>>,
-    login_data: web::Json<LoginRequest>,
-) -> impl Responder {
+async fn fetch_data(db: web::Data<Mutex<Connection>>) -> impl Responder {
     let conn = db.lock().unwrap();
-    let table_name = &login_data.table_name;
     let mut stmt = conn
-        .prepare(&format!("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM {}",table_name))
+        .prepare("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM entries")
         .unwrap();
     let entries = stmt
         .query_map([], |row| {
@@ -284,8 +146,7 @@ async fn fetch_data(
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // Initialize SQLite database
-// srv    let conn = Connection::open("../../../../idsdatabase.db").unwrap();
-    let conn = Connection::open("database.db").unwrap();
+    let conn = Connection::open("../../../../idsdatabase.db").unwrap();
     init_db(&conn).unwrap();
 
     // Wrap the database connection in a Mutex for thread safety
@@ -325,8 +186,6 @@ async fn main() -> std::io::Result<()> {
         .route("/test", web::get().to(test))
         .route("/save", web::post().to(save_data))
         .route("/data", web::get().to(fetch_data))
-        .route("/login", web::post().to(login))
-        .route("/create_table", web::post().to(create_table_endpoint))
 })
 .bind("127.0.0.1:4173")?
 .run()

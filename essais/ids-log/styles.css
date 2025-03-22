@@ -8,7 +8,11 @@ body {
     /*align-items: center;*/
     height: 100vh;
 }
+.login {
+    font-family: Arial, sans-serif;
+    margin: 20px;
 
+}
 .App {
     background: white;
     padding: 20px;
@@ -53,15 +57,31 @@ label {
     margin-bottom: 5px;
 }
 
-input {
+/*input_dep {
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size:1em;
+}*/
+input, button {
+    margin: 5px;
+    padding: 10px;
 }
+textarea {
+    width: 100%;
+    height: auto;
+    resize: vertical; /* Allow vertical resizing */
+    /*min-height: 50px; /* Set a minimum height */
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size:1em;
 
+}
 button[type="submit"] {
     width: 100%;
     padding: 10px;
