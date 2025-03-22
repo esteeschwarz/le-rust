@@ -9,7 +9,7 @@ use serde::Deserialize;
 #[clap(about, version, author)]
 struct Args {
     /// Path to the TOML configuration file
-    #[clap(short = 'c', long, default_value = "~/wpconfig.toml")]
+    #[clap(short = 'c', long, default_value = "~/wpconfig.toml")] // postid has to be set in toml
     config: String,
 
     /// XML-RPC method to call (e.g., mt.editPost or mt.newPost)
