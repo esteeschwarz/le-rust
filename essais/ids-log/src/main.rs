@@ -146,8 +146,7 @@ fn init_db(conn: &Connection) -> rusqlite::Result<()> {
     
         // Create a new table for the database
         conn.execute(
-            &format!(
-                "CREATE TABLE IF NOT EXISTS {} (
+                    "CREATE TABLE IF NOT EXISTS ?1 (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     field1 TEXT,
                     field2 TEXT,
@@ -159,11 +158,8 @@ fn init_db(conn: &Connection) -> rusqlite::Result<()> {
                     field8 TEXT,
                     field9 TEXT,
                     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-                )",
-                table_name
-            ),
-            [],
-        )?;
+                )",params![table_name],
+            )?;
     
         Ok(())
     }
@@ -284,8 +280,8 @@ async fn fetch_data(
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // Initialize SQLite database
-// srv    let conn = Connection::open("../../../../idsdatabase.db").unwrap();
-    let conn = Connection::open("database.db").unwrap();
+    let conn = Connection::open("../../../../idsdatabase.db").unwrap();
+//    let conn = Connection::open("database.db").unwrap();
     init_db(&conn).unwrap();
 
     // Wrap the database connection in a Mutex for thread safety
