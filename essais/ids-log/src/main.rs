@@ -224,7 +224,7 @@ async fn save_data(
 }
 
 // Fetch all data from the database
-async fn fetch_data_not(
+async fn fetch_data_login(
     db: web::Data<Mutex<Connection>>,
     login_data: web::Json<LoginRequest>,
 ) -> impl Responder {
@@ -233,9 +233,9 @@ async fn fetch_data_not(
     let mut stmt = conn
         .prepare(&format!("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM {}",table_name))
         .unwrap();
-    let mut stmt = conn
-        .prepare("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM entries")
-        .unwrap();
+    // let mut stmt = conn
+    //     .prepare("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM entries")
+    //     .unwrap();
     let entries = stmt
         .query_map([], |row| {
             Ok(Entry {
@@ -380,7 +380,8 @@ async fn main() -> std::io::Result<()> {
         .app_data(db.clone())
         .route("/test", web::get().to(test))
         .route("/save", web::post().to(save_data))
-        .route("/data", web::get().to(fetch_data))
+        // .route("/data", web::get().to(fetch_data))
+        .route("/data", web::get().to(fetch_data_login))
         .route("/login", web::post().to(login))
         .route("/create_table", web::post().to(create_table_endpoint))
 })
