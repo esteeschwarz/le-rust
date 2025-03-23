@@ -25,7 +25,7 @@ async function saveData(event) {
 
     try {
         // const response = await fetch("http://mini12:4173/save", {
-            const response = await fetch("/save", {
+            const response = await fetch("/rserver/save", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

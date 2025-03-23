@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const tableName = tableNameInput.value;
         const password = passwordInput.value;
 
-        const response = await fetch("/login", {
+        const response = await fetch("/rserver/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ table_name: tableName, password }),
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const tableName = tableNameInput.value;
         const password = passwordInput.value;
 
-        const response = await fetch("/create_table", {
+        const response = await fetch("/rserver/create_table", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ table_name: tableName, password }),
