@@ -53,7 +53,7 @@ async fn create_table_endpoint(
             Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
 
         }
-        Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
+       // Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
     }
     // match create_table(&conn, table_name, password) {
     //     Ok(_) => HttpResponse::Ok().body("Table created successfully!"),
