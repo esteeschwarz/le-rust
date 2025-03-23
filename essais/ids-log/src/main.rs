@@ -24,7 +24,7 @@ async fn login(
     let conn = db.lock().unwrap();
     let table_name = &login_data.table_name;
     let password = &login_data.password;
-    let masterpassword = &login_data.masterpassword;
+   // let masterpassword = &login_data.masterpassword;
 
     match check_credentials(&conn, table_name, password) {
         Ok(true) => HttpResponse::Ok().body("Login successful!"),
@@ -46,7 +46,7 @@ async fn create_table_endpoint(
     match check_create_pwd(&conn, table_name, password,masterpassword) {
         Ok(_) => {
             HttpResponse::Ok().body("masterpassword provided, create table...").
-            match create_table(&conn, table_name, password) {
+                create_table(&conn, table_name, password) {
                 Ok(_) => HttpResponse::Ok().body("Table created successfully!"),
                 Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
             }
