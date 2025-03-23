@@ -53,6 +53,10 @@ async function fetchData() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ table_name: window.tableName, password: window.password }),
     });
+    console.log("fetching data");
+    console.log(window.tableName);
+
+
         if (!response.ok) {
             throw new Error("failed endpoint /data\n");
         }
