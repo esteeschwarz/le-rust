@@ -17,6 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await response.text();
 
         if (response.ok) {
+                // Store tableName and password in the window object
+                window.tableName = tableName;
+                window.password = password;
             document.getElementById("App").style.display = "table";
             document.getElementById("login").style.display = "block";
             message.textContent = "login succesfull";

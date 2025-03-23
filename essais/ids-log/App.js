@@ -16,7 +16,7 @@ function showDataTable() {
 function showLogin() {
     document.getElementById("App").style.display = "table";
     document.getElementById("login").style.display = "block";
-    fetchData();
+    // fetchData();
 }
 async function saveData(event) {
     event.preventDefault();
@@ -48,13 +48,14 @@ async function fetchData() {
         // const response = await fetch("http://mini12:4173/data");
         // const response = await fetch("/rserver/data"); //content error
     //    const response = await fetch("/data"); //404
-    const response = await fetch("/data", {
+    const response = await fetch("/rserver/data", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ table_name: window.tableName, password: window.password }),
     });
-    console.log("fetching data");
+    console.log("fetching data /rserver/data");
     console.log(window.tableName);
+    console.log("< window.tableName");
 
 
         if (!response.ok) {
