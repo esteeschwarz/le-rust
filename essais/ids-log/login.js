@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const response = await fetch("/rserver/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ table_name: tableName, password ,masterpassword}),
+            body: JSON.stringify({ table_name: tableName, password}),
         });
         const result = await response.text();
 
