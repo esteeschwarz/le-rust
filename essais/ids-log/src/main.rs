@@ -332,7 +332,7 @@ async fn fetch_data_login(
     // Parse the UTC timestamp
     let utc_time = match DateTime::parse_from_rfc3339(&utc_timestamp) {
         Ok(time) => time,
-        Err(e) => return Err(rusqlite::Error::UserFunctionError(Box::new(e))),
+        Err(e) => eprintln!("Failed to format date: {}", e),
     };
     // Convert to CET (UTC+1 or UTC+2 depending on DST)
     let cet_offset = FixedOffset::east(1 * 3600); // CET is UTC+1
