@@ -205,7 +205,7 @@ async fn save_data(
     //console.log("save data to:");
     //console.log(table_name);
 
-    println!("main.rs::Fetching data for table: {}", login_data.table_name);
+    println!("main.rs.save::Fetching data for table: {}", table_name);
     let query = &format!("INSERT INTO {} (field1, field2, field3, field4, field5, field6, field7, field8, field9)
                  VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",table_name);
     //console.log(query);
@@ -235,6 +235,8 @@ async fn fetch_data_login(
 ) -> impl Responder {
     let conn = db.lock().unwrap();
     let table_name = &login_data.table_name;
+    println!("main.rs.fetch::Fetching data for table: {}", table_name);
+
     let mut stmt = conn
         .prepare(&format!("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM {}",table_name))
         .unwrap();

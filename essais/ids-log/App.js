@@ -79,6 +79,8 @@ async function fetchData() {
             throw new Error("failed endpoint /data\n");
         }
         const data = await response.json();
+        console.log("data received:")
+        console.log(data)
         //const tbody = document.getElementById("data-body");
         const tcbody = document.getElementById("data-c-body");
         tcbody.innerHTML = data
