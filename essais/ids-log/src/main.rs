@@ -57,7 +57,7 @@ async fn create_table_endpoint(
     //     Ok(_) => HttpResponse::Ok().body("Table created successfully!"),
     //     Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
     // }
-}
+//}
 
 // #[actix_web::main]
 // async fn main() -> std::io::Result<()> {
