@@ -324,7 +324,7 @@ async fn fetch_data_login(
     //     .unwrap();
 
 
-    let entries = stmt.
+    let entries = stmt
     .query_map([], |row| {
 
     let utc_timestamp: String = row.get(10)?;
