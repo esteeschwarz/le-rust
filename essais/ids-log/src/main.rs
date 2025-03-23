@@ -324,7 +324,8 @@ async fn fetch_data_login(
     //     .unwrap();
 
 
-    let entries = stmt
+    let entries = stmt.
+    .query_map([], |row| {
 
     let utc_timestamp: String = row.get(10)?;
 
@@ -336,7 +337,6 @@ async fn fetch_data_login(
     let cet_time = utc_time.with_timezone(&cet_offset);
 
 
-        .query_map([], |row| {
             Ok(Entry {
                 id: row.get(0)?,
                 field1: row.get(1)?,
