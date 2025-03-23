@@ -1,6 +1,6 @@
 use actix_cors::Cors; // Import the CORS middleware
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
-use rusqlite::{params, Connection, Error,Box};
+use rusqlite::{params, Connection, Error};
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
 use chrono::{Local, DateTime, FixedOffset, Utc};
