@@ -46,13 +46,13 @@ async fn create_table_endpoint(
     match check_create_pwd(&conn, table_name, password,masterpassword) {
         Ok(_) => {
             //HttpResponse::Ok().body("masterpassword provided, create table...");
-                match create_table(&conn, table_name, password);// {
+                match create_table(&conn, table_name, password) {
                 Ok(_) => HttpResponse::Ok().body("Table created successfully!"),
                 Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
             }//,
            // Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
 
-       // }
+        }
         Ok(false) => HttpResponse::Unauthorized().body("Invalid master password"),
         Err(_) => HttpResponse::InternalServerError().body("Database error"),
     }
