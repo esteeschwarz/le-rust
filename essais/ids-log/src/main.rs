@@ -224,7 +224,7 @@ async fn save_data(
 }
 
 // Fetch all data from the database
-async fn fetch_data(
+async fn fetch_data_not(
     db: web::Data<Mutex<Connection>>,
     login_data: web::Json<LoginRequest>,
 ) -> impl Responder {
@@ -233,6 +233,59 @@ async fn fetch_data(
     let mut stmt = conn
         .prepare(&format!("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM {}",table_name))
         .unwrap();
+    let mut stmt = conn
+        .prepare("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM entries")
+        .unwrap();
+    let entries = stmt
+        .query_map([], |row| {
+            Ok(Entry {
+                id: row.get(0)?,
+                field1: row.get(1)?,
+                field2: row.get(2)?,
+                field3: row.get(3)?,
+                field4: row.get(4)?,
+                field5: row.get(5)?,
+                field6: row.get(6)?,
+                field7: row.get(7)?,
+                field8: row.get(8)?,
+                field9: row.get(9)?,
+                timestamp: row.get(10)?,
+            })
+           // .query_map([], |row| {
+                // Fetch the UTC timestamp from the database
+                // let utc_timestamp: String = row.get(10)?;
+    
+                // // Parse the UTC timestamp
+                // let utc_time = DateTime::parse_from_rfc3339(&utc_timestamp).unwrap();
+    
+                // // Convert to CET (UTC+1 or UTC+2 depending on DST)
+                // let cet_offset = FixedOffset::east(1 * 3600); // CET is UTC+1
+                // let cet_time = utc_time.with_timezone(&cet_offset);
+    
+                // // Create the Entry struct with the CET timestamp
+                // Ok(Entry {
+                //     id: row.get(0)?,
+                //     field1: row.get(1)?,
+                //     field2: row.get(2)?,
+                //     field3: row.get(3)?,
+                //     field4: row.get(4)?,
+                //     field5: row.get(5)?,
+                //     field6: row.get(6)?,
+                //     field7: row.get(7)?,
+                //     field8: row.get(8)?,
+                //     field9: row.get(9)?,
+                //     timestamp: cet_time.to_rfc3339(), // Store the CET timestamp as a string
+                // })
+            })
+       // })
+        .unwrap()
+        .collect::<Result<Vec<Entry>, _>>()
+        .unwrap();
+    HttpResponse::Ok().json(entries)
+}
+
+async fn fetch_data(db: web::Data<Mutex<Connection>>) -> impl Responder {
+    let conn = db.lock().unwrap();
     let mut stmt = conn
         .prepare("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM entries")
         .unwrap();
