@@ -24,6 +24,7 @@ async fn login(
     let conn = db.lock().unwrap();
     let table_name = &login_data.table_name;
     let password = &login_data.password;
+    let masterpassword = &login_data.masterpassword;
 
     match check_credentials(&conn, table_name, password) {
         Ok(true) => HttpResponse::Ok().body("Login successful!"),
@@ -40,11 +41,22 @@ async fn create_table_endpoint(
     let conn = db.lock().unwrap();
     let table_name = &login_data.table_name;
     let password = &login_data.password;
-
-    match create_table(&conn, table_name, password) {
-        Ok(_) => HttpResponse::Ok().body("Table created successfully!"),
+    let masterpassword = &login_data.masterpassword;
+    
+    match check_create_pwd(&conn, table_name, password,masterpassword) {
+        Ok(_) => {
+            HttpResponse::Ok().body("masterpassword provided, create table..."),
+            match create_table(&conn, table_name, password) {
+                Ok(_) => HttpResponse::Ok().body("Table created successfully!"),
+                Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
+            }
+        }
         Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
     }
+    // match create_table(&conn, table_name, password) {
+    //     Ok(_) => HttpResponse::Ok().body("Table created successfully!"),
+    //     Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
+    // }
 }
 
 // #[actix_web::main]
@@ -99,6 +111,7 @@ struct FormData {
 struct LoginRequest {
     table_name: String,
     password: String,
+    masterpassword: String,
 }
 #[derive(Serialize, Deserialize)]
 struct SaveRequest {
@@ -147,8 +160,20 @@ fn init_db(conn: &Connection) -> rusqlite::Result<()> {
             Ok(false)
         }
     }
+    fn check_create_pwd(conn: &Connection, table_name: &str, password: &str) -> rusqlite::Result<bool> {
+        let mut stmt = conn.prepare("SELECT field2 FROM mastertable WHERE field1 = 'createtablepassword'")?;
+        let mut rows = stmt.query(params![table_name])?;
+    
+        if let Some(row) = rows.next()? {
+            let stored_password: String = row.get(0)?;
+            Ok(stored_password == password)
+        } else {
+            Ok(false)
+        }
+    }
     fn create_table(conn: &Connection, table_name: &str, password: &str) -> rusqlite::Result<()> {
         // Add the new table to the meta table
+
         conn.execute(
             "INSERT INTO meta (table_name, password) VALUES (?1, ?2)",
             params![table_name, password],
