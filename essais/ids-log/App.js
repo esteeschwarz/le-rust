@@ -46,9 +46,13 @@ async function saveData(event) {
 async function fetchData() {
     try {
         // const response = await fetch("http://mini12:4173/data");
-        const response = await fetch("/rserver/data"); //content error
+        // const response = await fetch("/rserver/data"); //content error
     //    const response = await fetch("/data"); //404
-
+    const response = await fetch("/rserver/data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ table_name: window.tableName, password: window.password }),
+    });
         if (!response.ok) {
             throw new Error("Failed to fetch endpoint /rserver/data\n");
         }
