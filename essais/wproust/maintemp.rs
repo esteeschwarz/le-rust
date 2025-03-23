@@ -9,7 +9,7 @@ use serde::Deserialize;
 #[clap(about, version, author)]
 struct Args {
     /// Path to the TOML configuration file
-    #[clap(short = 'c', long, default_value = "~/wpconfig.toml")] // postid has to be set in toml
+    #[clap(short = 'c', long, default_value = "~/wpconfig.toml")]
     config: String,
 
     /// XML-RPC method to call (e.g., mt.editPost or mt.newPost)
@@ -203,9 +203,9 @@ fn main() {
     let blogurl = args.blogurl
         .or_else(|| config.as_ref().map(|c| c.wordpress.blogurl.clone()))
         .unwrap_or_else(|| "http://mini12/ap/wpost/xmlrpc.php".to_string());
-  //  let postid = args.postid
-    //    .or_else(|| config.as_ref().map(|c| c.wordpress.postid.clone()))
-      //  .unwrap_or_else(|| "2000".to_string());
+    let postid = args.postid
+        .or_else(|| config.as_ref().map(|c| c.wordpress.postid.clone()))
+        .unwrap_or_else(|| "2000".to_string());
     println!("4");
     // Read the Markdown file
     let markdown_content = fs::read_to_string(&args.markdownfile).expect("Failed to read Markdown file");
@@ -223,7 +223,7 @@ fn main() {
     // Handle different methods
     match args.method.as_str() {
         "editPost" => {
-            let postid = args.postid
+            let postid = config.and_then(|c| Some(c.wordpress.postid))
                 .unwrap_or_else(|| "2000".to_string());
             let post_title = extract_first_heading(&markdown_content)
                 .unwrap_or_else(|| "untitled-x".to_string());
