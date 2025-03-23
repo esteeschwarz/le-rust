@@ -202,8 +202,11 @@ async fn save_data(
 ) -> impl Responder {
     let conn = db.lock().unwrap();
     let table_name = &login_data.table_name;
+    console.log("save data to:");
+    console.log(table_name);
     let query = &format!("INSERT INTO {} (field1, field2, field3, field4, field5, field6, field7, field8, field9)
                  VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",table_name);
+    console.log(query);
     match conn.execute(
         query,
         params![

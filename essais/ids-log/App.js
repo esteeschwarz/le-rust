@@ -27,11 +27,21 @@ async function saveData(event) {
         // const response = await fetch("http://mini12:4173/save", {
             try {
                 // const response = await fetch("http://mini12:4173/save", {
+                // const response = await fetch("/rserver/save", {
+                //         method: "POST",
+                //     headers: { "Content-Type": "application/json" },
+                //     body: JSON.stringify(data),
+                // });
                 const response = await fetch("/rserver/save", {
-                        method: "POST",
+                    method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data),
+                    body: JSON.stringify({
+                        ...data,
+                        table_name: window.tableName,
+                        password: window.password,
+                    }),
                 });
+        
         if (!response.ok) {
             throw new Error("Failed to save data");
         }
