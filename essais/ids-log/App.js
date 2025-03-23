@@ -36,12 +36,17 @@ async function saveData(event) {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        ...data,
+                        data,
                         table_name: window.tableName,
                         password: window.password,
                     }),
                 });
-        
+                console.log("savin post() data rserver/save");
+                console.log(window.tableName);
+                console.log(window.password);
+            
+                console.log("< window.tableName");
+            
         if (!response.ok) {
             throw new Error("Failed to save data");
         }
