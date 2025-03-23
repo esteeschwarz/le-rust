@@ -17,8 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await response.text();
 
         if (response.ok) {
-            document.getElementById("App").style.display = "block";
-            document.getElementById("login").style.display = "none";
+            document.getElementById("App").style.display = "table";
+            document.getElementById("login").style.display = "block";
             fetchData();        
         } else {
             message.textContent = result;
@@ -37,8 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await response.text();
 
         if (response.ok) {
-            document.getElementById("App").style.display = "block";
-            document.getElementById("login").style.display = "none";
+            document.getElementById("App").style.display = "table";
+            document.getElementById("login").style.display = "block";
 
         } else {
             message.textContent = result;
