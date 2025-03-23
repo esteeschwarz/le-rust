@@ -381,7 +381,7 @@ async fn main() -> std::io::Result<()> {
         .route("/test", web::get().to(test))
         .route("/save", web::post().to(save_data))
         // .route("/data", web::get().to(fetch_data))
-        .route("/data", web::get().to(fetch_data_login))
+        .route("/data", web::post().to(fetch_data_login))
         .route("/login", web::post().to(login))
         .route("/create_table", web::post().to(create_table_endpoint))
 })

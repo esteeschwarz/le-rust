@@ -46,15 +46,17 @@ async function saveData(event) {
 async function fetchData() {
     try {
         // const response = await fetch("http://mini12:4173/data");
-        // const response = await fetch("/rserver/data"); //content error
+        // const response = await fetch("/rserver/data"); //content error // .rs: was get(), now post()
     //    const response = await fetch("/data"); //404
     const response = await fetch("/rserver/data", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ table_name: window.tableName, password: window.password }),
     });
-    console.log("fetching data /rserver/data");
+    console.log("fetching post() data rserver/data");
     console.log(window.tableName);
+    console.log(window.password);
+
     console.log("< window.tableName");
 
 
