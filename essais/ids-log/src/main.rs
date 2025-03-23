@@ -11,11 +11,11 @@ use chrono::{Local, DateTime, FixedOffset};
 //use serde::{Deserialize, Serialize};
 //use std::sync::Mutex;
 
-#[derive(Serialize, Deserialize)]
-struct LoginRequest {
-    table_name: String,
-    password: String,
-}
+// #[derive(Serialize, Deserialize)]
+// struct LoginRequest {
+//     table_name: String,
+//     password: String,
+// }
 
 async fn login(
     login_data: web::Json<LoginRequest>,
@@ -94,6 +94,11 @@ struct FormData {
     field7: String,
     field8: String,
     field9: String,
+}
+#[derive(Serialize, Deserialize)]
+struct LoginRequest {
+    table_name: String,
+    password: String,
 }
 
 fn init_db(conn: &Connection) -> rusqlite::Result<()> {

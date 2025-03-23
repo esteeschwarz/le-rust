@@ -22,6 +22,7 @@ async function saveData(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
+    const meta = Object.fromEntries(LoginRequest.entries());
 
    // try {
         // const response = await fetch("http://mini12:4173/save", {
@@ -37,8 +38,9 @@ async function saveData(event) {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         data,
+                        // meta
                         table_name: window.tableName,
-                        password: window.password,
+                        password: window.password
                     }),
                 });
                 console.log("savin post() data rserver/save");
