@@ -233,6 +233,9 @@ async fn fetch_data(
     let mut stmt = conn
         .prepare(&format!("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM {}",table_name))
         .unwrap();
+    let mut stmt = conn
+        .prepare("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM entries")
+        .unwrap();
     let entries = stmt
         .query_map([], |row| {
             Ok(Entry {
