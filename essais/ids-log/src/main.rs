@@ -17,6 +17,55 @@ use chrono::{Local, DateTime, FixedOffset};
 //     password: String,
 // }
 
+
+// Define the structure of a database entry
+#[derive(Serialize, Deserialize)]
+struct Entry {
+    id: i32,
+    field1: String,
+    field2: String,
+    field3: String,
+    field4: String,
+    field5: String,
+    field6: String,
+    field7: String,
+    field8: String,
+    field9: String,
+    timestamp: String,
+}
+
+// Define the structure for form data
+#[derive(Serialize, Deserialize)]
+struct FormData {
+    field1: String,
+    field2: String,
+    field3: String,
+    field4: String,
+    field5: String,
+    field6: String,
+    field7: String,
+    field8: String,
+    field9: String,
+}
+#[derive(Serialize, Deserialize)]
+struct LoginRequest {
+    table_name: String,
+    password: String,
+    #[serde(default = "default_masterpassword")] // Set default value
+    masterpassword: String,
+}
+
+// Function to provide the default value for masterpassword
+fn default_masterpassword() -> String {
+    "default_master_password".to_string() // Replace with your desired default value
+}
+#[derive(Serialize, Deserialize)]
+struct SaveRequest {
+    data: FormData,       // Nested struct for the "data" field
+    table_name: String,   // Corresponds to "table_name" in JSON
+    password: String,     // Corresponds to "password" in JSON
+}
+
 async fn login(
     login_data: web::Json<LoginRequest>,
     db: web::Data<Mutex<Connection>>,
@@ -63,67 +112,6 @@ async fn create_table_endpoint(
     //     Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
     // }
 //}
-
-// #[actix_web::main]
-// async fn main() -> std::io::Result<()> {
-//     let conn = Connection::open("main.db").unwrap();
-//     init_db(&conn).unwrap();
-
-//     let db = web::Data::new(Mutex::new(conn));
-
-//     HttpServer::new(move || {
-//         App::new()
-//             .app_data(db.clone())
-//             .route("/login", web::post().to(login))
-//             .route("/create_db", web::post().to(create_db))
-//     })
-//     .bind("127.0.0.1:5000")?
-//     .run()
-//     .await
-// }
-/// 
-
-// Define the structure of a database entry
-#[derive(Serialize, Deserialize)]
-struct Entry {
-    id: i32,
-    field1: String,
-    field2: String,
-    field3: String,
-    field4: String,
-    field5: String,
-    field6: String,
-    field7: String,
-    field8: String,
-    field9: String,
-    timestamp: String,
-}
-
-// Define the structure for form data
-#[derive(Serialize, Deserialize)]
-struct FormData {
-    field1: String,
-    field2: String,
-    field3: String,
-    field4: String,
-    field5: String,
-    field6: String,
-    field7: String,
-    field8: String,
-    field9: String,
-}
-#[derive(Serialize, Deserialize)]
-struct LoginRequest {
-    table_name: String,
-    password: String,
-    masterpassword: String,
-}
-#[derive(Serialize, Deserialize)]
-struct SaveRequest {
-    data: FormData,       // Nested struct for the "data" field
-    table_name: String,   // Corresponds to "table_name" in JSON
-    password: String,     // Corresponds to "password" in JSON
-}
 fn init_db(conn: &Connection) -> rusqlite::Result<()> {
     // Create the meta table
     conn.execute(
