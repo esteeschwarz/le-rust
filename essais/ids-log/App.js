@@ -25,11 +25,15 @@ async function saveData(event) {
 
     try {
         // const response = await fetch("http://mini12:4173/save", {
-        const response = await fetch("/rserver/save", {
+            const response = await fetch("/save", {
                 method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-        });
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    ...data,
+                    table_name: window.tableName,
+                    password: window.password,
+                }),
+            });
         if (!response.ok) {
             throw new Error("Failed to save data");
         }
@@ -44,8 +48,11 @@ async function saveData(event) {
 async function fetchData() {
     try {
         // const response = await fetch("http://mini12:4173/data");
-        const response = await fetch("/rserver/data");
-        
+        const response = await fetch("/rserver/data", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ table_name: window.tableName, password: window.password }),
+        });
         if (!response.ok) {
             throw new Error("Failed to fetch data");
         }

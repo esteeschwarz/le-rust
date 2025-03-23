@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (response.ok) {
             document.getElementById("App").style.display = "block";
             document.getElementById("login").style.display = "none";
-           // fetchData();        
+            fetchData();        
         } else {
             message.textContent = result;
         }

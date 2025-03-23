@@ -146,7 +146,8 @@ fn init_db(conn: &Connection) -> rusqlite::Result<()> {
     
         // Create a new table for the database
         conn.execute(
-                    "CREATE TABLE IF NOT EXISTS ?1 (
+            &format!(
+                "CREATE TABLE IF NOT EXISTS {} (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     field1 TEXT,
                     field2 TEXT,
@@ -158,8 +159,11 @@ fn init_db(conn: &Connection) -> rusqlite::Result<()> {
                     field8 TEXT,
                     field9 TEXT,
                     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-                )",params![table_name],
-            )?;
+                )",
+                table_name
+            ),
+            [],
+        )?;
     
         Ok(())
     }
