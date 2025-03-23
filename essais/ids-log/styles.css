@@ -21,6 +21,8 @@ body {
     width: 80%;
     max-width: 800px;
     display: table;
+    height: 90vh;
+
 }
 
 h1 {
