@@ -10,3 +10,4 @@ edition ="2024"
    serde-xml-rs = "0.4"
    pulldown-cmark = "0.8" # For Markdown-to-HTML conversion
    toml = "0.7"
+   quick-xml = "0.37.2"

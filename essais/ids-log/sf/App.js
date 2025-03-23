@@ -1,55 +1,26 @@
 function showInputForm() {
-    document.getElementById("App").style.display = "table";
     document.getElementById("input-form").style.display = "block";
     document.getElementById("data-table").style.display = "none";
-    document.getElementById("login").style.display = "block";
-
 }
 
 function showDataTable() {
-    document.getElementById("App").style.display = "table";
     document.getElementById("input-form").style.display = "none";
-    document.getElementById("login").style.display = "block";
     document.getElementById("data-table").style.display = "block";
     fetchData();
 }
-function showLogin() {
-    document.getElementById("App").style.display = "table";
-    document.getElementById("login").style.display = "block";
-    // fetchData();
-}
+
 async function saveData(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
-    //const metaData = new LoginRequest(event.target);
-    //const meta = Object.fromEntries(metaData.entries());
 
-   // try {
+    try {
         // const response = await fetch("http://mini12:4173/save", {
-            try {
-                // const response = await fetch("http://mini12:4173/save", {
-                // const response = await fetch("/rserver/save", {
-                //         method: "POST",
-                //     headers: { "Content-Type": "application/json" },
-                //     body: JSON.stringify(data),
-                // });
-                const response = await fetch("/rserver/save", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        data,
-                        // meta
-                        table_name: window.tableName,
-                        password: window.password
-                    }),
-                });
-                console.log("savin post() data rserver/save");
-                console.log(window.tableName);
-                console.log(window.password);
-            
-                console.log("< window.tableName");
-            
+        const response = await fetch("/rserver/save", {
+                method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
         if (!response.ok) {
             throw new Error("Failed to save data");
         }
@@ -64,26 +35,12 @@ async function saveData(event) {
 async function fetchData() {
     try {
         // const response = await fetch("http://mini12:4173/data");
-        // const response = await fetch("/rserver/data"); //content error // .rs: was get(), now post()
-    //    const response = await fetch("/data"); //404
-    const response = await fetch("/rserver/data", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ table_name: window.tableName, password: window.password }),
-    });
-    console.log("fetching post() data rserver/data");
-    console.log(window.tableName);
-    console.log(window.password);
-
-    console.log("< window.tableName");
-
-
+        const response = await fetch("/rserver/data");
+        
         if (!response.ok) {
-            throw new Error("failed endpoint /data\n");
+            throw new Error("Failed to fetch data");
         }
         const data = await response.json();
-        console.log("data received:")
-        console.log(data)
         //const tbody = document.getElementById("data-body");
         const tcbody = document.getElementById("data-c-body");
         tcbody.innerHTML = data

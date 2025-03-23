@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDS log</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="App">
+        <h1>logbuch der trojer</h1>
+        <div class="view-switcher">
+            <button onclick="showInputForm()">input data</button>
+            <button onclick="showDataTable()">view log</button>
+        </div>
+
+        <div id="input-form">
+            <form onsubmit="saveData(event)">
+                <div><label>temp: <input type="text" name="field1" ></label></div>
+                <div><label>atmo: <input type="text" name="field2" ></label></div>
+                <div><label>plant: <input type="text" name="field3" ></label></div>
+                <div><label>work: <input type="text" name="field4" ></label></div>
+                <div><label>common: <input type="text" name="field5" ></label></div>
+                <div><label>tech: <input type="text" name="field6" ></label></div>
+                <div><label>read: <input type="text" name="field7" ></label></div>
+                <div><label>polis: <input type="text" name="field8" ></label></div>
+                <div><label>wtf: <input type="text" name="field9" ></label></div>
+                <button type="submit">commit</button>
+            </form>
+        </div>
+
+        <!--custom-->
+        <div id="data-table" style="display: none;">
+            <h2>IDS LOG</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>what so happens</th>
+                    </tr>
+                </thead>
+                <tbody id="data-c-body"></tbody>
+            </table>
+        </div>
+       <!-- <div id="data-table" style="display: none;">
+            <h2>Stored Data</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Field 1</th>
+                        <th>Field 2</th>
+                        <th>Field 3</th>
+                        <th>Field 4</th>
+                        <th>Field 5</th>
+                        <th>Field 6</th>
+                        <th>Field 7</th>
+                        <th>Field 8</th>
+                        <th>Field 9</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody id="data-body"></tbody>
+            </table>
+        </div>-->
+    </div>
+
+    <script src="App.js"></script>
+</body>
+</html>

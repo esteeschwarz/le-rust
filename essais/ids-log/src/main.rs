@@ -1,9 +1,21 @@
 use actix_cors::Cors; // Import the CORS middleware
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
-use rusqlite::{params, Connection};
+use rusqlite::{params, Connection, Error};
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
-use chrono::{Local, DateTime, FixedOffset};
+use chrono::{NaiveDateTime, DateTime, FixedOffset, Utc};
+
+/// wt login
+//use actix_web::{web, HttpResponse, Responder};
+//use rusqlite::{params, Connection};
+//use serde::{Deserialize, Serialize};
+//use std::sync::Mutex;
+
+// #[derive(Serialize, Deserialize)]
+// struct LoginRequest {
+//     table_name: String,
+//     password: String,
+// }
 
 
 // Define the structure of a database entry
@@ -35,9 +47,157 @@ struct FormData {
     field8: String,
     field9: String,
 }
+#[derive(Serialize, Deserialize)]
+struct LoginRequest {
+    table_name: String,
+    password: String,
+    #[serde(default = "default_masterpassword")] // Set default value
+    masterpassword: String,
+}
 
-// Initialize the SQLite database
+// Function to provide the default value for masterpassword
+fn default_masterpassword() -> String {
+    "default_master_password".to_string() // Replace with your desired default value
+}
+#[derive(Serialize, Deserialize)]
+struct SaveRequest {
+    data: FormData,       // Nested struct for the "data" field
+    table_name: String,   // Corresponds to "table_name" in JSON
+    password: String,     // Corresponds to "password" in JSON
+}
+
+async fn login(
+    login_data: web::Json<LoginRequest>,
+    db: web::Data<Mutex<Connection>>,
+) -> impl Responder {
+    let conn = db.lock().unwrap();
+    let table_name = &login_data.table_name;
+    let password = &login_data.password;
+   // let masterpassword = &login_data.masterpassword;
+
+    match check_credentials(&conn, table_name, password) {
+        Ok(true) => HttpResponse::Ok().body("Login successful!"),
+        Ok(false) => HttpResponse::Unauthorized().body("Invalid credentials. Create new table?"),
+        Err(_) => HttpResponse::InternalServerError().body("Database error"),
+    }
+}
+
+
+async fn create_table_endpoint(
+    login_data: web::Json<LoginRequest>,
+    db: web::Data<Mutex<Connection>>,
+) -> impl Responder {
+    let conn = db.lock().unwrap();
+    let table_name = &login_data.table_name;
+    let password = &login_data.password;
+    let masterpassword = &login_data.masterpassword;
+    
+    match check_create_pwd(&conn, table_name, password,masterpassword) {
+        Ok(_) => {
+            //HttpResponse::Ok().body("masterpassword provided, create table...");
+                match create_table(&conn, table_name, password) {
+                Ok(_) => HttpResponse::Ok().body("Table created successfully!"),
+                Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
+            }//,
+           // Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
+
+        }
+        Ok(false) => HttpResponse::Unauthorized().body("Invalid master password"),
+        Err(_) => HttpResponse::InternalServerError().body("Database error"),
+    }
+       // Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
+    }
+    // match create_table(&conn, table_name, password) {
+    //     Ok(_) => HttpResponse::Ok().body("Table created successfully!"),
+    //     Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
+    // }
+//}
 fn init_db(conn: &Connection) -> rusqlite::Result<()> {
+    // Create the meta table
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS meta (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            table_name TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL
+        )",
+        [],
+    )?;
+
+    // Create a default table (optional)
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS default_table (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            field1 TEXT,
+            field2 TEXT,
+            field3 TEXT,
+            field4 TEXT,
+            field5 TEXT,
+            field6 TEXT,
+            field7 TEXT,
+            field8 TEXT,
+            field9 TEXT,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+        )",
+        [],
+    )?;
+
+    Ok(())
+}    fn check_credentials(conn: &Connection, table_name: &str, password: &str) -> rusqlite::Result<bool> {
+        let mut stmt = conn.prepare("SELECT password FROM meta WHERE table_name = ?1")?;
+        let mut rows = stmt.query(params![table_name])?;
+    
+        if let Some(row) = rows.next()? {
+            let stored_password: String = row.get(0)?;
+            Ok(stored_password == password)
+        } else {
+            Ok(false)
+        }
+    }
+    fn check_create_pwd(conn: &Connection, table_name: &str, password: &str,masterpassword:&str) -> rusqlite::Result<bool> {
+        let mut stmt = conn.prepare("SELECT field2 FROM mastertable WHERE field1 = ?1")?;
+        let mut rows = stmt.query(params!["createtablepassword"])?;
+    
+        if let Some(row) = rows.next()? {
+            let stored_password: String = row.get(0)?;
+            Ok(stored_password == masterpassword)
+        } else {
+            Ok(false)
+        }
+    }
+    fn create_table(conn: &Connection, table_name: &str, password: &str) -> rusqlite::Result<()> {
+        // Add the new table to the meta table
+
+        conn.execute(
+            "INSERT INTO meta (table_name, password) VALUES (?1, ?2)",
+            params![table_name, password],
+        )?;
+    
+        // Create a new table for the database
+        conn.execute(
+            &format!(
+                "CREATE TABLE IF NOT EXISTS {} (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    field1 TEXT,
+                    field2 TEXT,
+                    field3 TEXT,
+                    field4 TEXT,
+                    field5 TEXT,
+                    field6 TEXT,
+                    field7 TEXT,
+                    field8 TEXT,
+                    field9 TEXT,
+                    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                )",
+                table_name
+            ),
+            [],
+        )?;
+    
+        Ok(())
+    }
+/////////////////////////////////
+// Initialize the SQLite database
+fn init_db_dep(conn: &Connection) -> rusqlite::Result<()> {
     conn.execute(
         "CREATE TABLE IF NOT EXISTS entries (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -63,13 +223,20 @@ async fn test() -> impl Responder {
 }
 
 // Save data to the database
-async fn save_data(
+async fn save_data_dep(
     form_data: web::Json<FormData>,
-    db: web::Data<Mutex<Connection>>,
+    login_data: web::Json<LoginRequest>,
+    db: web::Data<Mutex<Connection>>
 ) -> impl Responder {
     let conn = db.lock().unwrap();
-    let query = "INSERT INTO entries (field1, field2, field3, field4, field5, field6, field7, field8, field9)
-                 VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)";
+    let table_name = &login_data.table_name;
+    //console.log("save data to:");
+    //console.log(table_name);
+
+    println!("main.rs.save::Fetching data for table: {}", table_name);
+    let query = &format!("INSERT INTO {} (field1, field2, field3, field4, field5, field6, field7, field8, field9)
+                 VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",table_name);
+    //console.log(query);
     match conn.execute(
         query,
         params![
@@ -89,7 +256,139 @@ async fn save_data(
     }
 }
 
+async fn save_data(
+    request: web::Json<SaveRequest>, // Deserialize the JSON body into SaveRequest
+    db: web::Data<Mutex<Connection>>,
+) -> impl Responder {
+    let conn = db.lock().unwrap();
+    let table_name = &request.table_name; // Access table_name from the request
+    let password = &request.password;    // Access password from the request
+    let form_data = &request.data;       // Access the nested FormData struct
+
+    // Check credentials
+    // match check_credentials(&conn, table_name, password) {
+    //     Ok(true) => {
+            // Save data to the table
+            eprintln!("rs save data to {}", table_name);
+
+            let query = format!(
+                "INSERT INTO {} (field1, field2, field3, field4, field5, field6, field7, field8, field9)
+                 VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
+                table_name
+            );
+            match conn.execute(
+                &query,
+                params![
+                    form_data.field1,
+                    form_data.field2,
+                    form_data.field3,
+                    form_data.field4,
+                    form_data.field5,
+                    form_data.field6,
+                    form_data.field7,
+                    form_data.field8,
+                    form_data.field9,
+                ],
+            ) {
+                Ok(_) => HttpResponse::Ok().json("Data saved successfully"),
+                Err(e) => {
+                    eprintln!("Failed to save data: {}", e);
+                    HttpResponse::InternalServerError().body("Failed to save data")
+                }
+            }
+        }
+    //     // Ok(false) => {
+    //     //     eprintln!("Invalid credentials for table: {}", table_name);
+    //     //     HttpResponse::Unauthorized().body("Invalid credentials")
+    //     // }
+    //     // Err(e) => {
+    //     //     eprintln!("Database error: {}", e);
+    //     //     HttpResponse::InternalServerError().body("Database error")
+    //     // }
+    // }
+// }
 // Fetch all data from the database
+async fn fetch_data_login(
+    db: web::Data<Mutex<Connection>>,
+    login_data: web::Json<LoginRequest>,
+) -> impl Responder {
+    let conn = db.lock().unwrap();
+    let table_name = &login_data.table_name;
+    println!("main.rs.fetch::Fetching data for table: {}", table_name);
+
+    let mut stmt = conn
+        .prepare(&format!("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM {}",table_name))
+        .unwrap();
+    // let mut stmt = conn
+    //     .prepare("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM entries")
+    //     .unwrap();
+
+
+    let entries = stmt
+    .query_map([], |row| {
+
+    let utc_timestamp: String = row.get(10)?;
+
+            // Parse the UTC timestamp without timezone
+            let naive_utc_time = NaiveDateTime::parse_from_str(&utc_timestamp, "%Y-%m-%d %H:%M:%S")
+                .expect("Failed to parse UTC timestamp");
+
+            // Convert NaiveDateTime to DateTime<Utc>
+            let utc_time = DateTime::<Utc>::from_utc(naive_utc_time, Utc);
+
+            // Convert to CET (UTC+1 or UTC+2 depending on DST)
+            let cet_offset = FixedOffset::east(1 * 3600); // CET is UTC+1
+            let cet_time = utc_time.with_timezone(&cet_offset);
+
+
+            Ok(Entry {
+                id: row.get(0)?,
+                field1: row.get(1)?,
+                field2: row.get(2)?,
+                field3: row.get(3)?,
+                field4: row.get(4)?,
+                field5: row.get(5)?,
+                field6: row.get(6)?,
+                field7: row.get(7)?,
+                field8: row.get(8)?,
+                field9: row.get(9)?,
+                timestamp: cet_time.to_rfc3339(), // Store the CET timestamp as a string
+
+                // timestamp: row.get(10)?,
+            })
+           // .query_map([], |row| {
+                // Fetch the UTC timestamp from the database
+                // let utc_timestamp: String = row.get(10)?;
+    
+                // // Parse the UTC timestamp
+                // let utc_time = DateTime::parse_from_rfc3339(&utc_timestamp).unwrap();
+    
+                // // Convert to CET (UTC+1 or UTC+2 depending on DST)
+                // let cet_offset = FixedOffset::east(1 * 3600); // CET is UTC+1
+                // let cet_time = utc_time.with_timezone(&cet_offset);
+    
+                // // Create the Entry struct with the CET timestamp
+                // Ok(Entry {
+                //     id: row.get(0)?,
+                //     field1: row.get(1)?,
+                //     field2: row.get(2)?,
+                //     field3: row.get(3)?,
+                //     field4: row.get(4)?,
+                //     field5: row.get(5)?,
+                //     field6: row.get(6)?,
+                //     field7: row.get(7)?,
+                //     field8: row.get(8)?,
+                //     field9: row.get(9)?,
+                //     timestamp: cet_time.to_rfc3339(), // Store the CET timestamp as a string
+                // })
+            })
+       // })
+        .unwrap()
+        .collect::<Result<Vec<Entry>, _>>()
+        .unwrap();
+    HttpResponse::Ok().json(entries)
+}
+
 async fn fetch_data(db: web::Data<Mutex<Connection>>) -> impl Responder {
     let conn = db.lock().unwrap();
     let mut stmt = conn
@@ -147,6 +446,7 @@ async fn fetch_data(db: web::Data<Mutex<Connection>>) -> impl Responder {
 async fn main() -> std::io::Result<()> {
     // Initialize SQLite database
     let conn = Connection::open("../../../../idsdatabase.db").unwrap();
+//    let conn = Connection::open("database.db").unwrap();
     init_db(&conn).unwrap();
 
     // Wrap the database connection in a Mutex for thread safety
@@ -185,7 +485,10 @@ async fn main() -> std::io::Result<()> {
         .app_data(db.clone())
         .route("/test", web::get().to(test))
         .route("/save", web::post().to(save_data))
-        .route("/data", web::get().to(fetch_data))
+        // .route("/data", web::get().to(fetch_data))
+        .route("/data", web::post().to(fetch_data_login))
+        .route("/login", web::post().to(login))
+        .route("/create_table", web::post().to(create_table_endpoint))
 })
 .bind("127.0.0.1:4173")?
 .run()

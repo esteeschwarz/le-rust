@@ -7,24 +7,57 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="App">
+    <div id="root"></div>
+<!-- 
+    <script>
+        // Read query parameters from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const tableName = urlParams.get('table_name');
+        const password = urlParams.get('password');
+
+        // Pass the table name and password to App.js
+        window.tableName = tableName;
+        window.password = password;
+    </script> -->
+        <!-- <div id="login" class="login">
+        <h1>Database Login</h1>
+        <input type="text" id="tableName" placeholder="Database Name">
+        <input type="password" id="password" placeholder="Password">
+        <input type="password" id="masterpassword" style="display: none;">
+        <button id="loginBtn">Login</button>
+        <button id="createTableBtn">Create Database</button>
+        <p id="message"></p>
+        </div> -->
+    <div id="App" class="App" style="display:table;">
         <h1>logbuch der trojer</h1>
         <div class="view-switcher">
             <button onclick="showInputForm()">input data</button>
             <button onclick="showDataTable()">view log</button>
+            <button onclick="showLogin()">login</button>
         </div>
+        <div id="login" class="login">
+            <h1>Database Login</h1>
+            <input type="text" id="tableName" placeholder="Database Name">
+            <input type="password" id="password" placeholder="Password">
+            <input type="password" id="masterpassword" style="display: none;">
+            <button id="loginBtn">Login</button>
+            <button id="createTableBtn">Create Database</button>
+            <p id="message"></p>
+            </div>
+    
 
         <div id="input-form">
             <form onsubmit="saveData(event)">
-                <div><label>temp: <input type="text" name="field1" ></label></div>
-                <div><label>atmo: <input type="text" name="field2" ></label></div>
-                <div><label>plant: <input type="text" name="field3" ></label></div>
-                <div><label>work: <input type="text" name="field4" ></label></div>
-                <div><label>common: <input type="text" name="field5" ></label></div>
-                <div><label>tech: <input type="text" name="field6" ></label></div>
-                <div><label>read: <input type="text" name="field7" ></label></div>
-                <div><label>polis: <input type="text" name="field8" ></label></div>
-                <div><label>wtf: <input type="text" name="field9" ></label></div>
+                <div><label>temp: <textarea  name="field1" ></textarea></label></div>
+                <div><label>atmo: <textarea  name="field2" ></textarea></label></div>
+                <div><label>plant: <textarea  name="field3" ></textarea></label></div>
+                <div><label>work: <textarea  name="field4" ></textarea></label></div>
+<!--                <div><label>common: <input type="text" name="field5" ></label></div>
+            -->            <div><label>common: <textarea name="field5" ></textarea></label></div>
+                <div><label>tech: <textarea  name="field6" ></textarea></label></div>
+                <div><label>read: <textarea  name="field7" ></textarea></label></div>
+                <div><label>polis: <textarea  name="field8" ></textarea></label></div>
+                <div><label>TODO/CHK/wtf: <textarea  name="field9" ></textarea></label></div>
                 <button type="submit">commit</button>
             </form>
         </div>
@@ -65,5 +98,6 @@
     </div>
 
     <script src="App.js"></script>
+    <script src="login.js"></script>
 </body>
 </html>
