@@ -22,7 +22,8 @@ async function saveData(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
-    const meta = Object.fromEntries(LoginRequest.entries());
+    //const metaData = new LoginRequest(event.target);
+    //const meta = Object.fromEntries(metaData.entries());
 
    // try {
         // const response = await fetch("http://mini12:4173/save", {
