@@ -350,7 +350,7 @@ async fn fetch_data_login(
                 field7: row.get(7)?,
                 field8: row.get(8)?,
                 field9: row.get(9)?,
-                timestamp: cet_time.to_rfc3339()?, // Store the CET timestamp as a string
+                timestamp: cet_time.to_rfc3339(), // Store the CET timestamp as a string
 
                 // timestamp: row.get(10)?,
             })
