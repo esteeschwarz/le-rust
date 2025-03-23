@@ -330,8 +330,10 @@ async fn fetch_data_login(
     let utc_timestamp: String = row.get(10)?;
 
     // Parse the UTC timestamp
-    let utc_time = DateTime::parse_from_rfc3339(&utc_timestamp).unwrap();
-
+    let utc_time = match DateTime::parse_from_rfc3339(&utc_timestamp) {
+        Ok(time) => time,
+        Err(e) => return Err(rusqlite::Error::UserFunctionError(Box::new(e))),
+    };
     // Convert to CET (UTC+1 or UTC+2 depending on DST)
     let cet_offset = FixedOffset::east(1 * 3600); // CET is UTC+1
     let cet_time = utc_time.with_timezone(&cet_offset);
@@ -348,7 +350,7 @@ async fn fetch_data_login(
                 field7: row.get(7)?,
                 field8: row.get(8)?,
                 field9: row.get(9)?,
-                timestamp: cet_time.to_rfc3339(), // Store the CET timestamp as a string
+                timestamp: cet_time.to_rfc3339()?, // Store the CET timestamp as a string
 
                 // timestamp: row.get(10)?,
             })
