@@ -100,7 +100,12 @@ struct LoginRequest {
     table_name: String,
     password: String,
 }
-
+#[derive(Serialize, Deserialize)]
+struct SaveRequest {
+    data: FormData,       // Nested struct for the "data" field
+    table_name: String,   // Corresponds to "table_name" in JSON
+    password: String,     // Corresponds to "password" in JSON
+}
 fn init_db(conn: &Connection) -> rusqlite::Result<()> {
     // Create the meta table
     conn.execute(
@@ -200,7 +205,7 @@ async fn test() -> impl Responder {
 }
 
 // Save data to the database
-async fn save_data(
+async fn save_data_dep(
     form_data: web::Json<FormData>,
     login_data: web::Json<LoginRequest>,
     db: web::Data<Mutex<Connection>>
@@ -233,6 +238,57 @@ async fn save_data(
     }
 }
 
+async fn save_data(
+    request: web::Json<SaveRequest>, // Deserialize the JSON body into SaveRequest
+    db: web::Data<Mutex<Connection>>,
+) -> impl Responder {
+    let conn = db.lock().unwrap();
+    let table_name = &request.table_name; // Access table_name from the request
+    let password = &request.password;    // Access password from the request
+    let form_data = &request.data;       // Access the nested FormData struct
+
+    // Check credentials
+    // match check_credentials(&conn, table_name, password) {
+    //     Ok(true) => {
+            // Save data to the table
+            eprintln!("rs save data to {}", table_name);
+
+            let query = format!(
+                "INSERT INTO {} (field1, field2, field3, field4, field5, field6, field7, field8, field9)
+                 VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
+                table_name
+            );
+            match conn.execute(
+                &query,
+                params![
+                    form_data.field1,
+                    form_data.field2,
+                    form_data.field3,
+                    form_data.field4,
+                    form_data.field5,
+                    form_data.field6,
+                    form_data.field7,
+                    form_data.field8,
+                    form_data.field9,
+                ],
+            ) {
+                Ok(_) => HttpResponse::Ok().json("Data saved successfully"),
+                Err(e) => {
+                    eprintln!("Failed to save data: {}", e);
+                    HttpResponse::InternalServerError().body("Failed to save data")
+                }
+            }
+        }
+    //     // Ok(false) => {
+    //     //     eprintln!("Invalid credentials for table: {}", table_name);
+    //     //     HttpResponse::Unauthorized().body("Invalid credentials")
+    //     // }
+    //     // Err(e) => {
+    //     //     eprintln!("Database error: {}", e);
+    //     //     HttpResponse::InternalServerError().body("Database error")
+    //     // }
+    // }
+// }
 // Fetch all data from the database
 async fn fetch_data_login(
     db: web::Data<Mutex<Connection>>,
