@@ -3,7 +3,7 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use rusqlite::{params, Connection, Error};
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
-use chrono::{Local, DateTime, FixedOffset, Utc};
+use chrono::{NaiveDateTime, DateTime, FixedOffset, Utc};
 
 /// wt login
 //use actix_web::{web, HttpResponse, Responder};
@@ -329,14 +329,16 @@ async fn fetch_data_login(
 
     let utc_timestamp: String = row.get(10)?;
 
-    // Parse the UTC timestamp
-    let utc_time = match DateTime::parse_from_rfc3339(&utc_timestamp) {
-        Ok(time) => time,
-        Err(_) => panic!("Failed to parse UTC timestamp"),
-    };
-    // Convert to CET (UTC+1 or UTC+2 depending on DST)
-    let cet_offset = FixedOffset::east(1 * 3600); // CET is UTC+1
-    let cet_time = utc_time.with_timezone(&cet_offset);
+            // Parse the UTC timestamp without timezone
+            let naive_utc_time = NaiveDateTime::parse_from_str(&utc_timestamp, "%Y-%m-%d %H:%M:%S")
+                .expect("Failed to parse UTC timestamp");
+
+            // Convert NaiveDateTime to DateTime<Utc>
+            let utc_time = DateTime::<Utc>::from_utc(naive_utc_time, Utc);
+
+            // Convert to CET (UTC+1 or UTC+2 depending on DST)
+            let cet_offset = FixedOffset::east(1 * 3600); // CET is UTC+1
+            let cet_time = utc_time.with_timezone(&cet_offset);
 
 
             Ok(Entry {
