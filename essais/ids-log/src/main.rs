@@ -155,7 +155,7 @@ fn init_db(conn: &Connection) -> rusqlite::Result<()> {
     }
     fn check_create_pwd(conn: &Connection, table_name: &str, password: &str,masterpassword:&str) -> rusqlite::Result<bool> {
         let mut stmt = conn.prepare("SELECT field2 FROM mastertable WHERE field1 = ?1")?;
-        let mut rows = stmt.query(params!['createtablepassword'])?;
+        let mut rows = stmt.query(params!["createtablepassword"])?;
     
         if let Some(row) = rows.next()? {
             let stored_password: String = row.get(0)?;
