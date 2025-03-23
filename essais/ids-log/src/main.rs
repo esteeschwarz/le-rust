@@ -3,7 +3,7 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use rusqlite::{params, Connection};
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
-use chrono::{Local, DateTime, FixedOffset};
+use chrono::{Local, DateTime, FixedOffset, Utc};
 
 /// wt login
 //use actix_web::{web, HttpResponse, Responder};
@@ -322,7 +322,20 @@ async fn fetch_data_login(
     // let mut stmt = conn
     //     .prepare("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM entries")
     //     .unwrap();
+
+
     let entries = stmt
+
+    let utc_timestamp: String = row.get(10)?;
+
+    // Parse the UTC timestamp
+    let utc_time = DateTime::parse_from_rfc3339(&utc_timestamp).unwrap();
+
+    // Convert to CET (UTC+1 or UTC+2 depending on DST)
+    let cet_offset = FixedOffset::east(1 * 3600); // CET is UTC+1
+    let cet_time = utc_time.with_timezone(&cet_offset);
+
+
         .query_map([], |row| {
             Ok(Entry {
                 id: row.get(0)?,
@@ -335,7 +348,9 @@ async fn fetch_data_login(
                 field7: row.get(7)?,
                 field8: row.get(8)?,
                 field9: row.get(9)?,
-                timestamp: row.get(10)?,
+                timestamp: cet_time.to_rfc3339(), // Store the CET timestamp as a string
+
+                // timestamp: row.get(10)?,
             })
            // .query_map([], |row| {
                 // Fetch the UTC timestamp from the database
