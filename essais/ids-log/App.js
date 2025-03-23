@@ -49,7 +49,7 @@ async function fetchData() {
         const response = await fetch("/rserver/data");
 
         if (!response.ok) {
-            throw new Error("Failed to fetch data");
+            throw new Error("Failed to fetch endpoint /rserver/data\n");
         }
         const data = await response.json();
         //const tbody = document.getElementById("data-body");

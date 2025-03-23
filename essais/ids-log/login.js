@@ -19,6 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (response.ok) {
             document.getElementById("App").style.display = "table";
             document.getElementById("login").style.display = "block";
+            message.textContent = "login succesfull";
+
+
             fetchData();        
         } else {
             message.textContent = result;
@@ -39,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (response.ok) {
             document.getElementById("App").style.display = "table";
             document.getElementById("login").style.display = "block";
+            message.textContent = "table created";
 
         } else {
             message.textContent = result;
