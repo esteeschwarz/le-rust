@@ -104,7 +104,7 @@ async function fetchData() {
             tcbody.innerHTML = data
             .map(
                 (row) => `
-                    <h4 class="date">${row.timestamp}</h4>
+                    <h2 class="date">${row.timestamp}</h2>
                     <p>${row.field1}</p>
                     <p>${row.field2}</p>
                     <p>${row.field3}</p>
