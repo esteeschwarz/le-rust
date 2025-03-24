@@ -86,19 +86,34 @@ async function fetchData() {
         console.log(data)
         //const tbody = document.getElementById("data-body");
         const tcbody = document.getElementById("data-c-body");
-        tcbody.innerHTML = data
+        // tcbody.innerHTML = data
+        //     .map(
+        //         (row) => `
+        //             <th>${row.timestamp}</th>
+        //             <tr>${row.field1}</tr>
+        //             <tr>${row.field2}</tr>
+        //             <tr>${row.field3}</tr>
+        //             <tr>${row.field4}</tr>
+        //             <tr>${row.field5}</tr>
+        //             <tr>${row.field6}</tr>
+        //             <tr>${row.field7}</tr>
+        //             <tr>${row.field8}</tr>
+        //             <tr>${row.field9}</tr>
+        //         `
+        //     )
+            tcbody.innerHTML = data
             .map(
                 (row) => `
-                    <th>${row.timestamp}</th>
-                    <tr>${row.field1}</tr>
-                    <tr>${row.field2}</tr>
-                    <tr>${row.field3}</tr>
-                    <tr>${row.field4}</tr>
-                    <tr>${row.field5}</tr>
-                    <tr>${row.field6}</tr>
-                    <tr>${row.field7}</tr>
-                    <tr>${row.field8}</tr>
-                    <tr>${row.field9}</tr>
+                    <p class="date">${row.timestamp}</p>
+                    <p>${row.field1}</p>
+                    <p>${row.field2}</p>
+                    <p>${row.field3}</p>
+                    <p>${row.field4}</p>
+                    <p>${row.field5}</p>
+                    <p>${row.field6}</p>
+                    <p>${row.field7}</p>
+                    <p>${row.field8}</p>
+                    <p>${row.field9}</p>
                 `
             )
         // tbody.innerHTML = data
