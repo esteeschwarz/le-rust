@@ -2,7 +2,7 @@ function showInputForm() {
     document.getElementById("App").style.display = "table";
     document.getElementById("input-form").style.display = "block";
     document.getElementById("data-table").style.display = "none";
-    document.getElementById("login").style.display = "block";
+    document.getElementById("login").style.display = "flex";
 
 }
 
@@ -15,7 +15,7 @@ function showDataTable() {
 }
 function showLogin() {
     document.getElementById("App").style.display = "table";
-    document.getElementById("login").style.display = "block";
+    document.getElementById("login").style.display = "flex";
     // fetchData();
 }
 async function saveData(event) {
