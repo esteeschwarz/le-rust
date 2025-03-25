@@ -9,7 +9,7 @@ function showInputForm() {
 function showDataTable() {
     document.getElementById("App").style.display = "table";
     document.getElementById("input-form").style.display = "none";
-    document.getElementById("login").style.display = "block";
+    document.getElementById("login").style.display = "none";
     document.getElementById("data-table").style.display = "block";
     fetchData();
 }
@@ -79,7 +79,7 @@ async function fetchData() {
 
 
         if (!response.ok) {
-            throw new Error("failed endpoint /data\n");
+            throw new Error("failed endpoint rserver/data\n");
         }
         const data = await response.json();
         console.log("data received:")

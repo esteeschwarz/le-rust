@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 window.password = password;
                 window.masterpassword = masterpassword;
             document.getElementById("App").style.display = "table";
-            document.getElementById("login").style.display = "block";
+            document.getElementById("login").style.display = "none";
             document.getElementById("masterpassword").style.display = "none";
             message.textContent = "login succesfull";
 
