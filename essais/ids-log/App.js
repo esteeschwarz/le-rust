@@ -2,7 +2,8 @@ function showInputForm() {
     document.getElementById("App").style.display = "table-row";
     document.getElementById("input-form").style.display = "block";
     document.getElementById("data-table").style.display = "none";
-    document.getElementById("login").style.display = "inline-table";
+//    document.getElementById("login").style.display = "inline-table";
+    document.getElementById("login").style.display = "none";
 
 }
 

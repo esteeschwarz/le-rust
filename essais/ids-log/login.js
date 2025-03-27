@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 window.tableName = tableName;
                 window.password = password;
                 window.masterpassword = masterpassword;
-            document.getElementById("App").style.display = "table";
+            document.getElementById("App").style.display = "table-row";
             document.getElementById("login").style.display = "none";
             document.getElementById("masterpassword").style.display = "none";
             message.textContent = "login succesfull";
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await response.text();
         console.log("sending create table request...");
         if (response.ok) {
-            document.getElementById("App").style.display = "table";
+            document.getElementById("App").style.display = "table-row";
             document.getElementById("login").style.display = "none";
             document.getElementById("masterpassword").style.display = "none";
             message.textContent = "table created";
