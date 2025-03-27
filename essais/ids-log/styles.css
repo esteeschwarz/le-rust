@@ -10,7 +10,7 @@ body {
     overflow-y: auto; /* Allow vertical scrolling if content overflows */
     overflow-x: hidden; /* Prevent horizontal scrolling */
     max-width: 94vw; /* Ensure the body does not exceed the viewport width */
-    box-sizing: border-box;
+    /*box-sizing: border-box;*/
 }
 
 .hash {
@@ -35,8 +35,8 @@ body {
     /*background: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 80%;*/
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+    width: 90%;
     /* max-width: 800px; */
     /*max-width: -webkit-;*/
     display: inline-table;
