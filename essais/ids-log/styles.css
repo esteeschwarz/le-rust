@@ -34,9 +34,9 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 80%;
     /* max-width: 800px; */
-    max-width: -webkit-;
-    display: table-row;
-    height: 90vh;
+    /*max-width: -webkit-;*/
+    display: inline-table;
+    /*height: 90vh;*/
 
 }
 
