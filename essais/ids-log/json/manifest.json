@@ -1,0 +1,14 @@
+{
+    "name": "IDS Log",
+    "short_name": "IDS",
+    "_comment_start_url": "/",
+    "display": "standalone",  
+    "background_color": "#ffffff",
+    "theme_color": "#000000",
+    "icons": [
+      {
+        "src": "mensapic.png",
+        "sizes": "320x318",
+        "type": "image/png"
+      }    ]
+  }
