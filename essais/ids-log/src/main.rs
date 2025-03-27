@@ -4,6 +4,7 @@ use rusqlite::{params, Connection, Error};
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
 use chrono::{NaiveDateTime, DateTime, FixedOffset, Utc};
+use regex::Regex;
 
 
 
@@ -286,7 +287,10 @@ async fn save_data(
                 }
             }
         }
- 
+        fn replace_hashtags(input: &str) -> String {
+            let re = Regex::new(r"#(\w+)").unwrap();
+            re.replace_all(input, r#"<span class="hash">$1</span>"#).to_string()
+        }
 // Fetch all data from the database
 async fn fetch_data_login(
     db: web::Data<Mutex<Connection>>,
@@ -320,15 +324,24 @@ async fn fetch_data_login(
 
             Ok(Entry {
                 id: row.get(0)?,
-                field1: row.get(1)?,
-                field2: row.get(2)?,
-                field3: row.get(3)?,
-                field4: row.get(4)?,
-                field5: row.get(5)?,
-                field6: row.get(6)?,
-                field7: row.get(7)?,
-                field8: row.get(8)?,
-                field9: row.get(9)?,
+                // field1: row.get(1)?,
+                // field2: row.get(2)?,
+                // field3: row.get(3)?,
+                // field4: row.get(4)?,
+                // field5: row.get(5)?,
+                // field6: row.get(6)?,
+                // field7: row.get(7)?,
+                // field8: row.get(8)?,
+                // field9: row.get(9)?,
+                field1: replace_hashtags(&row.get::<_, String>(1)?),
+                field2: replace_hashtags(&row.get::<_, String>(2)?),
+                field3: replace_hashtags(&row.get::<_, String>(3)?),
+                field4: replace_hashtags(&row.get::<_, String>(4)?),
+                field5: replace_hashtags(&row.get::<_, String>(5)?),
+                field6: replace_hashtags(&row.get::<_, String>(6)?),
+                field7: replace_hashtags(&row.get::<_, String>(7)?),
+                field8: replace_hashtags(&row.get::<_, String>(8)?),
+                field9: replace_hashtags(&row.get::<_, String>(9)?),
                 timestamp: cet_time.to_rfc3339(), // Store the CET timestamp as a string
 
                 // timestamp: row.get(10)?,

@@ -12,6 +12,10 @@ body {
     max-width: 94vw; /* Ensure the body does not exceed the viewport width */
     box-sizing: border-box;
 }
+
+.hashtag {
+    color: lightblue;
+}
 .login {
     font-family: Arial, sans-serif;
     margin: 20px;
