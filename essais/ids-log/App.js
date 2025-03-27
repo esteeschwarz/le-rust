@@ -1,21 +1,21 @@
 function showInputForm() {
-    document.getElementById("App").style.display = "table";
+    document.getElementById("App").style.display = "table-row";
     document.getElementById("input-form").style.display = "block";
     document.getElementById("data-table").style.display = "none";
-    document.getElementById("login").style.display = "flex";
+    document.getElementById("login").style.display = "inline-table";
 
 }
 
 function showDataTable() {
-    document.getElementById("App").style.display = "table";
+    document.getElementById("App").style.display = "table-row";
     document.getElementById("input-form").style.display = "none";
     document.getElementById("login").style.display = "none";
     document.getElementById("data-table").style.display = "block";
     fetchData();
 }
 function showLogin() {
-    document.getElementById("App").style.display = "table";
-    document.getElementById("login").style.display = "flex";
+    document.getElementById("App").style.display = "table-row";
+    document.getElementById("login").style.display = "inline-table";
     // fetchData();
 }
 async function saveData(event) {
