@@ -297,7 +297,7 @@ async fn fetch_data_login(
     println!("main.rs.fetch::Fetching data for table: {}", table_name);
 
     let mut stmt = conn
-        .prepare(&format!("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM {}",table_name))
+        .prepare(&format!("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM {} ORDER BY timestamp DESC",table_name))
         .unwrap();
    
 
