@@ -185,7 +185,7 @@ fn init_db_dep(conn: &Connection) -> rusqlite::Result<()> {
         .unwrap();
     println!("{:?}", entries); //wks.
     println!("{:?}", entries[0].masterpassword); //wks.
-        let mut stored_password: &String = generate_random_string().to_string();
+        let mut stored_password: &String = &generate_random_string().to_string();
         println!("create pwd random before fetch db {}",stored_password);
         stored_password = &entries[0].masterpassword;
 
