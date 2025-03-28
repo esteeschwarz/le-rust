@@ -181,9 +181,10 @@ fn init_db_dep(conn: &Connection) -> rusqlite::Result<()> {
             // if stored_password == masterpassword {
         
             Ok(stored_password == masterpassword)
-                }       // } else {
-        //     Ok(false)
-        // }
+                }       // } 
+                else {
+            Ok(false)
+        }
     }
     fn create_table(conn: &Connection, table_name: &str, password: &str) -> rusqlite::Result<()> {
         // Add the new table to the meta table
