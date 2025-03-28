@@ -46,7 +46,11 @@ struct LoginRequest {
     #[serde(default = "default_masterpassword")] // Set default value
     masterpassword: String,
 }
-
+#[derive(Serialize, Deserialize,Debug)]
+struct masterData {
+    request: String,
+    masterpassword: String,
+    }
 // Function to provide the default value for masterpassword
 fn generate_random_string() -> String {
     let mut rng = rand::thread_rng();
@@ -167,25 +171,31 @@ fn init_db_dep(conn: &Connection) -> rusqlite::Result<()> {
         }
     }
     fn check_create_pwd(conn: &Connection, table_name: &str, password: &str,masterpassword:&str) -> rusqlite::Result<bool> {
-        let mut stmt = conn.prepare("SELECT field2 FROM mastertable WHERE field1 = ?1")?;
-        let mut rows = stmt.query(params!["createtablepassword"])?;
+        let mut stmt = conn.prepare("SELECT * FROM meta WHERE `table_name` = 'createTable'")
+        .unwrap();
+    println!("fetchdata");
+    let entries = stmt.query_map([], |row|{
+        Ok(masterData{
+            request: row.get(1)?,
+            masterpassword: row.get(2)?,
+        })
+    })
+        .unwrap()
+        .collect::<Result<Vec<masterData>, _>>()
+        .unwrap();
+    println!("{:?}", entries); //wks.
+    println!("{:?}", entries[0].masterpassword); //wks.
         let mut stored_password: String = generate_random_string().to_string();
-        println!("create pwd stored before fetch db {}",stored_password);
-        //println!("table row: {}",rows);
-//        stored_password = row.get(0)?;
-        println!("create pwd in fetch db {}",stored_password);
+        println!("create pwd random before fetch db {}",stored_password);
+        stored_password = entries[0].masterpassword;
+
+        println!("create pwd in fetch meta {}",stored_password);
         println!("master pwd provided {}",masterpassword);
       
-         if let Some(row) = rows.next()? {
-            println!("table row: {}",row.get(0).to_string());
-            // if stored_password == masterpassword {
         
             Ok(stored_password == masterpassword)
-                }       // } 
-                else {
-            Ok(false)
         }
-    }
+    // }
     fn create_table(conn: &Connection, table_name: &str, password: &str) -> rusqlite::Result<()> {
         // Add the new table to the meta table
 
