@@ -193,7 +193,7 @@ fn init_db_dep(conn: &Connection) -> rusqlite::Result<()> {
         println!("master pwd provided {}",masterpassword);
       
         
-            Ok(db_stored_password == masterpassword)
+            Ok(stored_password == masterpassword)
         }
     // }
     fn create_table(conn: &Connection, table_name: &str, password: &str) -> rusqlite::Result<()> {
