@@ -5,6 +5,8 @@ use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
 use chrono::{NaiveDateTime, DateTime, FixedOffset, Utc};
 use regex::Regex;
+use rand::{distributions::Alphanumeric, Rng};
+use rand::distributions::Uniform;
 
 
 
@@ -46,8 +48,29 @@ struct LoginRequest {
 }
 
 // Function to provide the default value for masterpassword
+fn generate_random_string() -> String {
+    let mut rng = rand::thread_rng();
+
+    // Generate 10 random letters
+    let letters: String = (0..10)
+        .map(|_| rng.sample(Alphanumeric))
+        .filter(|c| c.is_ascii_alphabetic()) // Ensure only letters
+        .map(|c| c as char)
+        .collect();
+
+    // Generate 5 random numbers
+    let numbers: String = (0..5)
+        .map(|_| rng.sample(Uniform::new(0, 10)))
+        .map(|n| n.to_string())
+        .collect();
+
+    // Combine letters and numbers
+    format!("{}{}", letters, numbers)
+}
 fn default_masterpassword() -> String {
-    "default_master_password".to_string() // Replace with your desired default value
+//    "default_master_password".to_string()
+    generate_random_string().to_string()
+
 }
 #[derive(Serialize, Deserialize)]
 struct SaveRequest {
@@ -102,7 +125,7 @@ async fn create_table_endpoint(
     //     Err(_) => HttpResponse::InternalServerError().body("Failed to create table"),
     // }
 //}
-fn init_db(conn: &Connection) -> rusqlite::Result<()> {
+fn init_db_dep(conn: &Connection) -> rusqlite::Result<()> {
     // Create the meta table
     conn.execute(
         "CREATE TABLE IF NOT EXISTS meta (
@@ -146,9 +169,10 @@ fn init_db(conn: &Connection) -> rusqlite::Result<()> {
     fn check_create_pwd(conn: &Connection, table_name: &str, password: &str,masterpassword:&str) -> rusqlite::Result<bool> {
         let mut stmt = conn.prepare("SELECT field2 FROM mastertable WHERE field1 = ?1")?;
         let mut rows = stmt.query(params!["createtablepassword"])?;
-    
+        let mut stored_password: String = generate_random_string().to_string();
+
         if let Some(row) = rows.next()? {
-            let stored_password: String = row.get(0)?;
+            stored_password = row.get(0)?;
             Ok(stored_password == masterpassword)
         } else {
             Ok(false)
@@ -187,7 +211,7 @@ fn init_db(conn: &Connection) -> rusqlite::Result<()> {
     }
 /////////////////////////////////
 // Initialize the SQLite database
-fn init_db_dep(conn: &Connection) -> rusqlite::Result<()> {
+fn init_db(conn: &Connection) -> rusqlite::Result<()> {
     conn.execute(
         "CREATE TABLE IF NOT EXISTS entries (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
