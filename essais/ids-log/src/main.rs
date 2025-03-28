@@ -172,12 +172,12 @@ fn init_db_dep(conn: &Connection) -> rusqlite::Result<()> {
         let mut stored_password: String = generate_random_string().to_string();
         println!("create pwd stored before fetch db {}",stored_password);
         //println!("table row: {}",rows);
-//        stored_password = rows.get(0)?;
+//        stored_password = row.get(0)?;
         println!("create pwd in fetch db {}",stored_password);
         println!("master pwd provided {}",masterpassword);
       
          if let Some(row) = rows.next()? {
-            println!("table row: {}",rows.get(0));
+            println!("table row: {}",row.get(0));
             // if stored_password == masterpassword {
         
             Ok(stored_password == masterpassword)
