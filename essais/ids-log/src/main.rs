@@ -187,9 +187,9 @@ fn init_db_dep(conn: &Connection) -> rusqlite::Result<()> {
     println!("{:?}", entries[0].masterpassword); //wks.
         let mut stored_password: String = generate_random_string().to_string();
         println!("create pwd random before fetch db {}",stored_password);
-        let db_stored_password = &entries[0].masterpassword;
+        stored_password = &entries[0].masterpassword;
 
-        println!("create pwd in fetch meta {}",db_stored_password);
+        println!("create pwd in fetch meta {}",stored_password);
         println!("master pwd provided {}",masterpassword);
       
         
