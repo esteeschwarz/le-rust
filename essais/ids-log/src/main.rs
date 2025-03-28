@@ -170,9 +170,12 @@ fn init_db_dep(conn: &Connection) -> rusqlite::Result<()> {
         let mut stmt = conn.prepare("SELECT field2 FROM mastertable WHERE field1 = ?1")?;
         let mut rows = stmt.query(params!["createtablepassword"])?;
         let mut stored_password: String = generate_random_string().to_string();
-
+        println!("create pwd stored before fetch db {}",stored_password);
         if let Some(row) = rows.next()? {
             stored_password = row.get(0)?;
+            println!("create pwd in fetch db {}",stored_password);
+            println!("master pwd provided {}",masterpassword);
+        
             Ok(stored_password == masterpassword)
         } else {
             Ok(false)
