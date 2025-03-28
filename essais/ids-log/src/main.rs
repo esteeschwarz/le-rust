@@ -177,7 +177,7 @@ fn init_db_dep(conn: &Connection) -> rusqlite::Result<()> {
         println!("master pwd provided {}",masterpassword);
       
          if let Some(row) = rows.next()? {
-            println!("table row: {}",row);
+            println!("table row: {}",rows.get(0));
             // if stored_password == masterpassword {
         
             Ok(stored_password == masterpassword)
