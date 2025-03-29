@@ -25,7 +25,7 @@ async fn main() {
         .and(warp::body::json())
         .map(|req: Request| {
             let response = Response {
-                message: format!("Hello, {}!", req.name),
+                message: format!("Hello from Rust, {}!", req.name),
             };
             warp::reply::json(&response)
         });
