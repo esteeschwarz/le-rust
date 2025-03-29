@@ -2,9 +2,7 @@ use warp::Filter;
 use serde::{Deserialize, Serialize};
 use warp::http::Method;
 use rusqlite::{params, Connection, Result};
-// use std::sync::Mutex;
-use std::sync::{Arc, Mutex}; // Import Arc
-
+use std::sync::{Arc, Mutex};
 
 #[derive(Deserialize)]
 struct UserRequest {
@@ -20,12 +18,9 @@ struct Response {
     allow_creation: bool,
 }
 
-// struct Database {
-//     conn: Mutex<Connection>,
-// }
 #[derive(Clone)]
 struct Database {
-    conn: Arc<Mutex<Connection>>, // Use Arc<Mutex<Connection>>
+    conn: Arc<Mutex<Connection>>,
 }
 
 impl Database {
@@ -39,9 +34,7 @@ impl Database {
             [],
         ).expect("Failed to create table");
         Self {
-            // conn: Mutex::new(conn),
-            conn: Arc::new(Mutex::new(conn)), // Wrap in Arc
-
+            conn: Arc::new(Mutex::new(conn)),
         }
     }
 
@@ -66,13 +59,9 @@ impl Database {
 
 #[tokio::main]
 async fn main() {
-    // let db = Database::new("../../../../idsdb.db");
-    // let db_filter = warp::any().map(move || db.clone());
-
     let db = Database::new("../../../../idsdb.db");
-    let db = Arc::new(db); // Wrap Database in Arc
-    let db_filter = warp::any().map(move || Arc::clone(&db)); // Clone Arc
-    
+    let db = Arc::new(db);
+    let db_filter = warp::any().map(move || Arc::clone(&db));
 
     let hello = warp::path("hello")
         .and(warp::post())
@@ -106,12 +95,20 @@ async fn main() {
                 Ok(None) => {
                     if let Some(master_pw) = req.master_password {
                         if db.check_user("master").unwrap() == Some(master_pw) {
-                            db.create_user(&req.name, &req.password.unwrap_or_default()).unwrap();
-                            warp::reply::json(&Response {
-                                message: "User created successfully".to_string(),
-                                request_password: false,
-                                allow_creation: false,
-                            })
+                            if let Some(new_password) = req.password {
+                                db.create_user(&req.name, &new_password).unwrap();
+                                warp::reply::json(&Response {
+                                    message: "User created successfully".to_string(),
+                                    request_password: false,
+                                    allow_creation: false,
+                                })
+                            } else {
+                                warp::reply::json(&Response {
+                                    message: "Enter a password to create user".to_string(),
+                                    request_password: true,
+                                    allow_creation: true,
+                                })
+                            }
                         } else {
                             warp::reply::json(&Response {
                                 message: "Incorrect master password".to_string(),
