@@ -40,17 +40,24 @@ impl Database {
 
     fn fetch_user_data(&self, user: &str) -> Result<String> {
         let conn = self.conn.lock().unwrap();
+        println!("user: {},self: {}",user,&self);
         let query = format!("SELECT * FROM {} ORDER BY timestamp DESC", user);
         let mut stmt = conn.prepare(&query)?;
-        let mut rows = stmt.query([])?;
-        let mut result = String::new();
-        while let Some(row) = rows.next()? {
-            for i in 0..stmt.column_count() {
+        let column_count = stmt.column_count(); // Get the column count
+        println!("nr of columns: {}",column_count);
+        let rows = stmt.query_map([], |row| {
+            let mut row_data = Vec::new();
+            for i in 0..column_count {
                 let field_value: String = row.get(i)?;
-                result.push_str(&format!("{}\n", field_value));
+                println!("fetchdata:{}",field_value);
+                row_data.push(field_value);
+                
             }
-        }
-        Ok(result)
+            Ok(row_data.join("\n"))
+        })?;
+        
+        let result: Vec<String> = rows.collect::<Result<_, _>>()?;
+        Ok(result.join("\n"))
     }
 }
 
@@ -62,10 +69,15 @@ async fn hello(req: web::Json<UserRequest>, db: web::Data<Arc<Database>>) -> imp
     
     if let Some(row) = rows.next().unwrap() {
         let stored_pw: String = row.get(0).unwrap();
+        println!("pw-st:{}",stored_pw);
+        
         if let Some(provided_pw) = &req.password {
+            println!("pw-pr:{}",provided_pw);
             if provided_pw == &stored_pw {
+                println!("passwords match...");
                 match db.fetch_user_data(&req.name) {
                     Ok(user_data) => {
+                        println!("data: {}",user_data);
                         return HttpResponse::Ok().json(Response {
                             message: user_data,
                             request_password: false,
