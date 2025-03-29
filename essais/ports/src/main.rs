@@ -1,14 +1,17 @@
-use warp::Filter;
+use actix_web::{web, App, HttpServer, Responder, HttpResponse, post};
+use actix_cors::Cors;
 use serde::{Deserialize, Serialize};
-use warp::http::Method;
 use rusqlite::{params, Connection, Result};
 use std::sync::{Arc, Mutex};
+use chrono::{NaiveDateTime, Utc, TimeZone};
+use regex::Regex;
 
 #[derive(Deserialize)]
 struct UserRequest {
     name: String,
     password: Option<String>,
     master_password: Option<String>,
+    new_password: Option<String>,
 }
 
 #[derive(Serialize)]
@@ -18,7 +21,6 @@ struct Response {
     allow_creation: bool,
 }
 
-#[derive(Clone)]
 struct Database {
     conn: Arc<Mutex<Connection>>,
 }
@@ -37,101 +39,54 @@ impl Database {
             conn: Arc::new(Mutex::new(conn)),
         }
     }
-
-    fn check_user(&self, name: &str) -> Result<Option<String>> {
-        let conn = self.conn.lock().unwrap();
-        let mut stmt = conn.prepare("SELECT pwkey FROM meta WHERE user = ?1")?;
-        let mut rows = stmt.query(params![name])?;
-        if let Some(row) = rows.next()? {
-            let pw: String = row.get(0)?;
-            Ok(Some(pw))
-        } else {
-            Ok(None)
-        }
-    }
-
-    fn create_user(&self, name: &str, password: &str) -> Result<()> {
-        let conn = self.conn.lock().unwrap();
-        conn.execute("INSERT INTO meta (user, pwkey) VALUES (?1, ?2)", params![name, password])?;
-        Ok(())
-    }
 }
 
-#[tokio::main]
-async fn main() {
-    let db = Database::new("../../../../idsdb.db");
-    let db = Arc::new(db);
-    let db_filter = warp::any().map(move || Arc::clone(&db));
-
-    let hello = warp::path("hello")
-        .and(warp::post())
-        .and(warp::body::json())
-        .and(db_filter)
-        .map(|req: UserRequest, db: Arc<Database>| {
-            match db.check_user(&req.name) {
-                Ok(Some(stored_pw)) => {
-                    if let Some(provided_pw) = req.password {
-                        if provided_pw == stored_pw {
-                            warp::reply::json(&Response {
-                                message: format!("Hello, {}!", req.name),
-                                request_password: false,
-                                allow_creation: false,
-                            })
-                        } else {
-                            warp::reply::json(&Response {
-                                message: "Incorrect password".to_string(),
-                                request_password: true,
-                                allow_creation: false,
-                            })
-                        }
-                    } else {
-                        warp::reply::json(&Response {
-                            message: "Password required".to_string(),
-                            request_password: true,
-                            allow_creation: false,
-                        })
-                    }
-                }
-                Ok(None) => {
-                    if let Some(master_pw) = req.master_password {
-                        if db.check_user("master").unwrap() == Some(master_pw) {
-                            if let Some(new_password) = req.password {
-                                db.create_user(&req.name, &new_password).unwrap();
-                                warp::reply::json(&Response {
-                                    message: "User created successfully".to_string(),
-                                    request_password: false,
-                                    allow_creation: false,
-                                })
-                            } else {
-                                warp::reply::json(&Response {
-                                    message: "Enter a password to create user".to_string(),
-                                    request_password: true,
-                                    allow_creation: true,
-                                })
-                            }
-                        } else {
-                            warp::reply::json(&Response {
-                                message: "Incorrect master password".to_string(),
-                                request_password: false,
-                                allow_creation: false,
-                            })
-                        }
-                    } else {
-                        warp::reply::json(&Response {
-                            message: "User not existing, create?".to_string(),
-                            request_password: false,
-                            allow_creation: true,
-                        })
-                    }
-                }
-                Err(_) => warp::reply::json(&Response {
-                    message: "Database error".to_string(),
+#[post("/hello")]
+async fn hello(req: web::Json<UserRequest>, db: web::Data<Arc<Database>>) -> impl Responder {
+    let conn = db.conn.lock().unwrap();
+    let mut stmt = conn.prepare("SELECT pwkey FROM meta WHERE user = ?1").unwrap();
+    let mut rows = stmt.query(params![req.name.clone()]).unwrap();
+    
+    if let Some(row) = rows.next().unwrap() {
+        let stored_pw: String = row.get(0).unwrap();
+        if let Some(provided_pw) = &req.password {
+            if provided_pw == &stored_pw {
+                return HttpResponse::Ok().json(Response {
+                    message: "Welcome!".to_string(),
                     request_password: false,
                     allow_creation: false,
-                }),
+                });
             }
+        }
+        return HttpResponse::Ok().json(Response {
+            message: "Incorrect password".to_string(),
+            request_password: true,
+            allow_creation: false,
         });
+    }
+    
+    HttpResponse::Ok().json(Response {
+        message: "User not found".to_string(),
+        request_password: false,
+        allow_creation: true,
+    })
+}
 
-    let routes = hello.with(warp::cors().allow_any_origin().allow_methods(&[Method::POST]).allow_headers(vec!["Content-Type"]));
-    warp::serve(routes).run(([0, 0, 0, 0], 4174)).await;
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    let db = Arc::new(Database::new("../../../../idsdb.db"));
+    HttpServer::new(move || {
+        let cors = Cors::default()
+            .allow_any_origin()
+            .allow_any_method()
+            .allow_any_header();
+        
+        App::new()
+            .wrap(cors)
+            .app_data(web::Data::new(db.clone()))
+            .service(hello)
+    })
+    .bind(("0.0.0.0", 4174))?
+    .run()
+    .await
 }
