@@ -1,10 +1,8 @@
 use actix_web::{web, App, HttpServer, Responder, HttpResponse, post};
 use actix_cors::Cors;
 use serde::{Deserialize, Serialize};
-use rusqlite::{params, Connection, Result, Row};
+use rusqlite::{params, Connection, Result};
 use std::sync::{Arc, Mutex};
-use chrono::{NaiveDateTime, Utc, TimeZone};
-use regex::Regex;
 
 #[derive(Deserialize)]
 struct UserRequest {
@@ -44,29 +42,15 @@ impl Database {
         let conn = self.conn.lock().unwrap();
         let query = format!("SELECT * FROM {} ORDER BY timestamp DESC", user);
         let mut stmt = conn.prepare(&query)?;
-        let column_names: Vec<String> = stmt.column_names().iter().map(|s| s.to_string()).collect();
-        let rows = stmt.query_map([], |row| {
-            let mut row_data = String::new();
-            let regex = Regex::new(r"#\\w+").unwrap();
-            for (i, col) in column_names.iter().enumerate() {
-                if col == "timestamp" {
-                    let timestamp: String = row.get(i)?;
-                    let timestamp = NaiveDateTime::parse_from_str(&timestamp, "%Y-%m-%d %H:%M:%S").unwrap();
-                    let cet_time = Utc.from_utc_datetime(&timestamp).with_timezone(&chrono::FixedOffset::east(3600));
-                    row_data.push_str(&format!("<span style='color: rgba(0,0,0,0.5);'>{}</span>\n", cet_time.format("%Y-%m-%d %H:%M:%S")));
-                } else {
-                    let field_value: String = row.get(i)?;
-                    let formatted_value = regex.replace_all(&field_value, |caps: &regex::Captures| {
-                        format!("<span style='color: blue;'>{}</span>", &caps[0])
-                    });
-                    row_data.push_str(&format!("<span style='font-family: Courier;'>{}</span>\n", formatted_value));
-                }
+        let mut rows = stmt.query([])?;
+        let mut result = String::new();
+        while let Some(row) = rows.next()? {
+            for i in 0..stmt.column_count() {
+                let field_value: String = row.get(i)?;
+                result.push_str(&format!("{}\n", field_value));
             }
-            Ok(row_data)
-        })?;
-        
-        let output: Vec<String> = rows.filter_map(|row| row.ok()).collect();
-        Ok(output.join("\n"))
+        }
+        Ok(result)
     }
 }
 
