@@ -72,21 +72,64 @@ struct swiftuiscrolltemplate: View {
 			VStack(spacing: 0) {
 				Divider()
 				HStack(spacing: 10) {
+					VStack(spacing: 4) {
+						Image(systemName: "square.and.pencil")
+							.imageScale(.large)
+							.symbolRenderingMode(.monochrome)
+							.frame(height: 26)
+							.clipped()
+						Text("Edit")
+							.font(.caption2)
+					}
+					.frame(maxWidth: .infinity)
+					.clipped()
+					.frame(height: 45)
+					.clipped()
+					.foregroundStyle(.secondary)
+					VStack(spacing: 4) {
+						Image(systemName: "note.text")
+							.symbolRenderingMode(.monochrome)
+							.frame(height: 26)
+							.clipped()
+						Text("View")
+							.font(.caption2)
+							.font(.caption2)
+					}
+					.frame(maxWidth: .infinity)
+					.clipped()
+					.frame(height: 45)
+					.clipped()
+					.foregroundStyle(.secondary)
+					VStack {
+						Image(systemName: "person.badge.key")
+							.symbolRenderingMode(.monochrome)
+							.frame(height: 26)
+							.clipped()
+						Text("Login")
+							.font(.caption2)
+							.font(.caption2)
+					}
+					.frame(maxWidth: .infinity)
+					.clipped()
+					.frame(height: 45)
+					.clipped()
+					.foregroundStyle(.secondary)
+					VStack {
+						Image(systemName: "magnifyingglass.circle")
+							.symbolRenderingMode(.monochrome)
+							.frame(height: 26)
+							.clipped()
+						Text("Search")
+							.font(.caption2)
+							.font(.caption2)
+					}
+					.frame(maxWidth: .infinity)
+					.clipped()
+					.frame(height: 45)
+					.clipped()
+					.foregroundStyle(.secondary)
 					ForEach(0..<5) { _ in // Replace with your data model here
-						VStack(spacing: 4) {
-							Image(systemName: "square.and.pencil.circle")
-								.imageScale(.large)
-								.symbolRenderingMode(.monochrome)
-								.frame(height: 26)
-								.clipped()
-							Text("Listen Now")
-								.font(.caption2)
-						}
-						.frame(maxWidth: .infinity)
-						.clipped()
-						.frame(height: 45)
-						.clipped()
-						.foregroundStyle(.secondary)
+						
 					}
 				}
 				.padding(.horizontal, 15)
