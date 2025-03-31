@@ -1,5 +1,5 @@
 use actix_cors::Cors; // Import the CORS middleware
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{web, App, HttpServer, Responder, HttpResponse, post};
 use rusqlite::{params, Connection, Error};
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
@@ -399,6 +399,7 @@ async fn fetch_data_login(
 
 async fn fetch_data(db: web::Data<Mutex<Connection>>) -> impl Responder {
     let conn = db.lock().unwrap();
+    println!("fetchdata fun");
     let mut stmt = conn
         .prepare("SELECT id, field1, field2, field3, field4, field5, field6, field7, field8, field9, timestamp FROM entries")
         .unwrap();
@@ -424,6 +425,11 @@ async fn fetch_data(db: web::Data<Mutex<Connection>>) -> impl Responder {
         .collect::<Result<Vec<Entry>, _>>()
         .unwrap();
     HttpResponse::Ok().json(entries)
+}
+#[post("/hello")]
+// Test endpoint to check if the server is running
+async fn test_he() -> impl Responder {
+    HttpResponse::Ok().body("Server is running!\n")
 }
 
 #[actix_web::main]
@@ -462,7 +468,28 @@ async fn main() -> std::io::Result<()> {
   // Start the Actix Web server
   HttpServer::new(move || {
     // Configure CORS to allow all origins
-    let cors = Cors::permissive(); // Allow all origins, methods, and headers
+    // let cors = Cors::permissive(); // Allow all origins, methods, and headers
+    let cors = Cors::default()
+    .allow_any_origin()
+    .allow_any_method()
+    .allow_any_header();
+    ////
+    // HttpServer::new(move || {
+    //     let cors = Cors::default()
+    //         .allow_any_origin()
+    //         .allow_any_method()
+    //         .allow_any_header();
+        
+    //     App::new()
+    //         .wrap(cors)
+    //         .app_data(db.clone())
+    //         .service(hello)
+    // })
+    // .bind(("0.0.0.0", 4174))?
+    // .run()
+    // .await
+    ////
+
 
     App::new()
         .wrap(cors) // Apply CORS middleware
@@ -473,8 +500,10 @@ async fn main() -> std::io::Result<()> {
         .route("/data", web::post().to(fetch_data_login))
         .route("/login", web::post().to(login))
         .route("/create_table", web::post().to(create_table_endpoint))
+        //.service(hello)
 })
-.bind("127.0.0.1:4173")?
+.bind(("0.0.0.0", 4173))?
+// .bind("127.0.0.1:4173")?
 .run()
 .await
 }
