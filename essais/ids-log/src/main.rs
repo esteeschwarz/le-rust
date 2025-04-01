@@ -478,8 +478,8 @@ async fn regex_search(
                     .expect("Failed to parse UTC timestamp");
                 let utc_time = DateTime::<Utc>::from_utc(naive_utc_time, Utc);
                 let cet_offset = FixedOffset::east(1 * 3600);
-                let cet_time = utc_time.with_timezone(&cet_offset);
-
+                // let cet_time = utc_time.with_timezone(&cet_offset);
+                // let cet_time = utc_timestamp
                 Ok(Entry {
                     id: row.get(0)?,
                     field1: row.get(1)?,
@@ -491,7 +491,9 @@ async fn regex_search(
                     field7: row.get(7)?,
                     field8: row.get(8)?,
                     field9: row.get(9)?,
-                    timestamp: cet_time.to_rfc3339(),
+                    // timestamp: cet_time.to_rfc3339(),
+                    timestamp: row.get(10)?,
+
                 })
             });
 
