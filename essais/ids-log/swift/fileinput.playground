@@ -1,0 +1,127 @@
+import SwiftUI
+import Foundation
+
+struct ContentView: View {
+    @State private var texts: [String] = Array(repeating: "", count: 10)
+    @FocusState private var focusedField: Int?
+    
+    // Store prettified URLs
+    @State private var urlTitles: [String: String] = [:]
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 10) {
+                // Input Fields
+                ForEach(0..<10, id: \.self) { index in
+                    GrowingTextField(text: $texts[index])
+                        .focused($focusedField, equals: index)
+                        .onSubmit {
+                            focusedField = (index < 9) ? index + 1 : nil
+                        }
+                }
+                
+                Divider().padding(.vertical, 10)
+
+                // Output View with Clickable Titles
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Output:")
+                        .font(.headline)
+                    
+                    ForEach(texts, id: \.self) { text in
+                        if !text.isEmpty {
+                            RichTextView(text: text, urlTitles: $urlTitles)
+                        }
+                    }
+                }
+                .padding()
+            }
+            .padding()
+        }
+        .onTapGesture { hideKeyboard() }
+    }
+
+    private func hideKeyboard() {
+        focusedField = nil
+    }
+}
+
+// MARK: - Growing TextField
+struct GrowingTextField: View {
+    @Binding var text: String
+    @State private var height: CGFloat = 40
+
+    var body: some View {
+        GeometryReader { geometry in
+            TextField("Enter text...", text: $text, axis: .vertical)
+                .padding(10)
+                .frame(minHeight: 40, maxHeight: height)
+                .background(RoundedRectangle(cornerRadius: 8).stroke(Color.gray, lineWidth: 1))
+                .onChange(of: text) { _ in adjustHeight(geometry.size.width) }
+        }
+        .frame(height: height)
+    }
+
+    private func adjustHeight(_ width: CGFloat) {
+        let textSize = text.size(withAttributes: [.font: UIFont.systemFont(ofSize: 17)])
+        let lines = ceil(textSize.width / (width - 20))
+        height = max(40, lines * (textSize.height + 5))
+    }
+}
+
+// MARK: - Rich Text View with Clickable Titles
+struct RichTextView: View {
+    let text: String
+    @Binding var urlTitles: [String: String]
+
+    var body: some View {
+        let formattedText = formatTextWithTitles(text)
+
+        Text(formattedText)
+            .textSelection(.enabled)
+            .onTapGesture {
+                if let url = extractURL(from: text) {
+                    UIApplication.shared.open(url)
+                }
+            }
+            .padding(8)
+            .background(RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.1)))
+            .onAppear {
+                if let urlString = extractURL(from: text)?.absoluteString, urlTitles[urlString] == nil {
+                    fetchTitle(for: urlString)
+                }
+            }
+    }
+    
+    private func formatTextWithTitles(_ text: String) -> AttributedString {
+        var attributedString = AttributedString(text)
+
+        if let url = extractURL(from: text), let title = urlTitles[url.absoluteString] {
+            let fullText = text.replacingOccurrences(of: url.absoluteString, with: title)
+            attributedString = AttributedString(fullText)
+        }
+
+        return attributedString
+    }
+    
+    private func extractURL(from text: String) -> URL? {
+        let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+        let matches = detector?.matches(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count))
+        
+        if let match = matches?.first, let range = Range(match.range, in: text) {
+            return URL(string: String(text[range]))
+        }
+        
+        return nil
+    }
+
+    private func fetchTitle(for urlString: String) {
+        // In a real app, we'd use URLSession here, but Playgrounds doesn’t allow network calls
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            urlTitles[urlString] = "Website Title for \(urlString)"  // Mock title
+        }
+    }
+}
+
+// MARK: - Run Playground
+import PlaygroundSupport
+PlaygroundPage.current.setLiveView(ContentView())
