@@ -36,8 +36,9 @@ struct naviwtoverlaybottom: View {
 				HStack(spacing: 10) {
 					ForEach(0..<5) { _ in // Replace with your data model here
 						VStack(spacing: 4) {
-							Image(systemName: "play.circle.fill")
+							Image(systemName: "square.and.arrow.up.circle")
 								.imageScale(.large)
+								.symbolRenderingMode(.monochrome)
 								.frame(height: 26)
 								.clipped()
 							Text("Listen Now")
