@@ -1,0 +1,76 @@
+---
+title: mermaid essais
+mermaid: true
+---
+
+# Diagramme généré depuis list.md
+
+```{r}
+#| echo: false
+#| output: true
+
+
+setwd(paste0(Sys.getenv("GIT_TOP"),"/le-rust/essais/mermaid/quarto"))
+md_to_mermaid <- function(md_text,target) {
+  preamble<-ifelse(target=="quarto","```{mermaid}","```mermaid")
+ # preamble<-""
+  result <- system2(
+    command = "./mermaid",
+    input = md_text,
+    stdout = TRUE,
+    stderr = TRUE
+  )
+  print(getwd())
+#  result<-system2("./mermaid", liste,TRUE,TRUE)
+ # print(result)
+  paste0(preamble,"\n",paste(result, collapse = "\n"),"```")
+}
+
+# Usage
+liste <- "
+- Python
+  - NumPy with very long description label, should break sometime
+  - Pandas
+- JavaScript
+  - TypeScript
+- Rust"
+
+mr <- md_to_mermaid(liste,"quarto")
+#cat(mr)
+library(readtext)
+src<-"list2.md"
+t<-readtext::readtext(src)$text
+mr<-md_to_mermaid(t,"quarto")
+cat(mr)
+```
+
+## sample
+`r md_to_mermaid(liste,"quarto")`
+
+## pr
+`r md_to_mermaid(t,"quarto")`
+
+## preformatted
+```{mermaid}
+graph TD
+
+T[target group] -->
+WH[who writes] -->
+CP[with what capacities] -->
+		TECH[technical]
+		CP --> SC[scientifically]
+		CP-->EFF[time effort]
+WH --> PU[whats her use purpose of the center page] -->
+		LP[landing page for individually set up project page] -->
+		AB[with only project abstract]
+		--> NOW[2-fold like now, with distinct project pages behind landingpage which could all be rendered differently individually, according to the framework used by the project maintainers and just needed to be pushed to main page]
+		LP-->CPP[complete project presentation]-->
+			IMP[needs to implement complex built paper?]-->
+			STL[standard paper layout?]-->
+			  BU[built-in pdf export extra to online version --> quarto, rmarkdown, python notebooks]
+		NOW-->UI[user interaction needed?]-->
+			BL[blog format]
+		NOW-->META[number of metadata to be included and how displayed?]-->
+		 CSV[meta from .csv table, layout template to include preformatted display fields for metadata]
+    IMP --> META
+```

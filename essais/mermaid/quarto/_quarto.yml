@@ -1,0 +1,70 @@
+project:
+  type: website
+ # output-dir: /var/www/html/pingtest
+  output-dir: ../render
+#  pre-render: "prerender.R"
+
+params:
+    reload: false
+   
+
+# extensions:
+#   iconify:
+#     style: "color: #b22222;"
+website:
+  title: "001"
+  navbar:
+    left:
+      - text: renders  
+        menu:  
+          - mermaid.md
+#          - pings.Rmd 
+ #         - play.qmd
+      # - play.html
+  #    - text: drafts
+      # - text: '`<i class="weui--folder-outlined"></i>`{=html}'
+   #     menu:
+    #      - href: draft-A.html
+     #       text: draft A
+      #    - href: draft-C.html
+       #     text: draft C      
+    right:
+      # - href: draft-A.pdf
+      #   text: pdf-temp
+      # - href: snc.qmd
+      - href: https://github.com/esteeschwarz/SPUND-LX/tree/main/germanic
+        icon: github
+  #site-url: https://esteeschwarz.github.io/open-lx/posts/germanic-ha
+
+format:
+  html:
+    theme:
+      - cosmo #litera
+      # - brand
+      # - litera
+      # - pandoc
+    #mainfont: Courier
+    monofont: Menlo
+    #font: Courier
+    # css: 
+    #   - styles.css
+    #   - css/icons.css
+    toc: true
+    toc-depth: 3
+    include-in-header:
+      text: |
+        <!-- HTML simply prints the inner text -->
+        <!-- 16482.snc -->
+        <script type="application/latex">
+        \newcommand{\he}[1]{#1}
+        </script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  # pdf:
+  #   fig-pos: "H" # Forces images to appear exactly where they are included
+  #   font-size: 12
+  #   colorlinks: true
+editor: source
+
+execute:
+  freeze: auto
