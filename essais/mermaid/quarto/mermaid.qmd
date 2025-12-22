@@ -1,6 +1,6 @@
 ---
 title: mermaid essais
-mermaid: true
+# mermaid: true
 ---
 
 # Diagramme généré depuis list.md
