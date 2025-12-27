@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>mermaid essais – 001</title>
+<title>list2 – 001</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -68,9 +68,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
-<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
-<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 <!-- HTML simply prints the inner text -->
 <!-- 16482.snc -->
 <script type="application/latex">
@@ -124,224 +121,55 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#diagramme-généré-depuis-list.md" id="toc-diagramme-généré-depuis-list.md" class="nav-link active" data-scroll-target="#diagramme-généré-depuis-list.md">Diagramme généré depuis list.md</a>
-  <ul class="collapse">
-  <li><a href="#sample" id="toc-sample" class="nav-link" data-scroll-target="#sample">sample</a></li>
-  <li><a href="#pr" id="toc-pr" class="nav-link" data-scroll-target="#pr">pr</a></li>
-  <li><a href="#preformatted" id="toc-preformatted" class="nav-link" data-scroll-target="#preformatted">preformatted</a></li>
-  </ul></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">mermaid essais</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
 
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<section id="diagramme-généré-depuis-list.md" class="level1">
-<h1>Diagramme généré depuis list.md</h1>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "/Users/guhl/Documents/GitHub/le-rust/essais/mermaid/quarto"</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in get_source(x, text_field = text_field, docid_field = docid_field, :
-Unsupported extension 'md' of file list2.md treating as plain text.</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "/Users/guhl/Documents/GitHub/le-rust/essais/mermaid/quarto"</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>```{mermaid}
-graph TD
-    TO[TOP]
-    TA[target group]
-    TO --&gt; TA
-    AC[academia]
-    TO --&gt; AC
-    FO[folks]
-    TO --&gt; FO
-    ST[students]
-    TO --&gt; ST
-    WH[who writes]
-    TO --&gt; WH
-    WI[with what capacities]
-    TO --&gt; WI
-    TE[technical]
-    WI --&gt; TE
-    SC[scientifically]
-    WI --&gt; SC
-    TI[time effort]
-    WI --&gt; TI
-    WH2[whats her use purpose of the center page]
-    WI --&gt; WH2
-    LA[landing page for individually set up project page]
-    WI --&gt; LA
-    WI2[with only project abstract]
-    LA --&gt; WI2
-    FO2[2-fold like now, with distinct project pages behind landingpage which could all be rendered differently individually, according to the framework used by the project maintainers and just needed to be pushed to main page]
-    LA --&gt; FO2
-    CO[complete project presentation]
-    WI --&gt; CO
-    NE[needs to implement complex built paper?]
-    CO --&gt; NE
-    ST2[standard paper layout?]
-    CO --&gt; ST2
-    BU[built-in pdf export extra to online version  -- quarto, rmarkdown, python notebooks]
-    ST2 --&gt; BU
-    US[user interaction needed?]
-    TO --&gt; US
-    BL[blog format]
-    US --&gt; BL
-    NU[number of metadata to be included and how displayed?]
-    TO --&gt; NU
-    XM[X meta from .csv table, layout template to include preformatted display fields for metadata.]
-    NU --&gt; XM
-```</code></pre>
-</div>
-</div>
-<section id="sample" class="level2">
-<h2 class="anchored" data-anchor-id="sample">sample</h2>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">graph TD
-    PY[Python]
-    NU[NumPy with very long description label, should break sometime]
-    PY --&gt; NU
-    PA[Pandas]
-    PY --&gt; PA
-    JA[JavaScript]
-    TY[TypeScript]
-    JA --&gt; TY
-    RU[Rust]
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-</section>
-<section id="pr" class="level2">
-<h2 class="anchored" data-anchor-id="pr">pr</h2>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">graph TD
-    TO[TOP]
-    TA[target group]
-    TO --&gt; TA
-    AC[academia]
-    TO --&gt; AC
-    FO[folks]
-    TO --&gt; FO
-    ST[students]
-    TO --&gt; ST
-    WH[who writes]
-    TO --&gt; WH
-    WI[with what capacities]
-    TO --&gt; WI
-    TE[technical]
-    WI --&gt; TE
-    SC[scientifically]
-    WI --&gt; SC
-    TI[time effort]
-    WI --&gt; TI
-    WH2[whats her use purpose of the center page]
-    WI --&gt; WH2
-    LA[landing page for individually set up project page]
-    WI --&gt; LA
-    WI2[with only project abstract]
-    LA --&gt; WI2
-    FO2[2-fold like now, with distinct project pages behind landingpage which could all be rendered differently individually, according to the framework used by the project maintainers and just needed to be pushed to main page]
-    LA --&gt; FO2
-    CO[complete project presentation]
-    WI --&gt; CO
-    NE[needs to implement complex built paper?]
-    CO --&gt; NE
-    ST2[standard paper layout?]
-    CO --&gt; ST2
-    BU[built-in pdf export extra to online version  -- quarto, rmarkdown, python notebooks]
-    ST2 --&gt; BU
-    US[user interaction needed?]
-    TO --&gt; US
-    BL[blog format]
-    US --&gt; BL
-    NU[number of metadata to be included and how displayed?]
-    TO --&gt; NU
-    XM[X meta from .csv table, layout template to include preformatted display fields for metadata.]
-    NU --&gt; XM
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-</section>
-<section id="preformatted" class="level2">
-<h2 class="anchored" data-anchor-id="preformatted">preformatted</h2>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">graph TD
-
-T[target group] --&gt;
-WH[who writes] --&gt;
-CP[with what capacities] --&gt;
-        TECH[technical]
-        CP --&gt; SC[scientifically]
-        CP--&gt;EFF[time effort]
-WH --&gt; PU[whats her use purpose of the center page] --&gt;
-        LP[landing page for individually set up project page] --&gt;
-        AB[with only project abstract]
-        --&gt; NOW[2-fold like now, with distinct project pages behind landingpage which could all be rendered differently individually, according to the framework used by the project maintainers and just needed to be pushed to main page]
-        LP--&gt;CPP[complete project presentation]--&gt;
-            IMP[needs to implement complex built paper?]--&gt;
-            STL[standard paper layout?]--&gt;
-              BU[built-in pdf export extra to online version --&gt; quarto, rmarkdown, python notebooks]
-        NOW--&gt;UI[user interaction needed?]--&gt;
-            BL[blog format]
-        NOW--&gt;META[number of metadata to be included and how displayed?]--&gt;
-         CSV[meta from .csv table, layout template to include preformatted display fields for metadata]
-    IMP --&gt; META
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
+<ul>
+<li>TOP
+<ul>
+<li>target group</li>
+<li>academia</li>
+<li>folks</li>
+<li>students</li>
+<li>who writes</li>
+<li>with what capacities
+<ul>
+<li>technical</li>
+<li>scientifically</li>
+<li>time effort</li>
+<li>whats her use purpose of the center page</li>
+<li>landing page for individually set up project page
+<ul>
+<li>with only project abstract</li>
+<li>2-fold like now, with distinct project pages behind landingpage which could all be rendered differently individually, according to the framework used by the project maintainers and just needed to be pushed to main page</li>
+</ul></li>
+<li>complete project presentation
+<ul>
+<li>needs to implement complex built paper?</li>
+<li>standard paper layout?
+<ul>
+<li>built-in pdf export extra to online version – quarto, rmarkdown, python notebooks</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>user interaction needed?
+<ul>
+<li>blog format</li>
+</ul></li>
+<li>number of metadata to be included and how displayed?
+<ul>
+<li>X meta from .csv table, layout template to include preformatted display fields for metadata.</li>
+</ul></li>
+</ul></li>
+</ul>
 
 
-</section>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

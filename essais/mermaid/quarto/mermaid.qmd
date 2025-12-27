@@ -15,7 +15,7 @@ md_to_mermaid <- function(md_text,target) {
   preamble<-ifelse(target=="quarto","```{mermaid}","```mermaid")
  # preamble<-""
   result <- system2(
-    command = "./mermaid",
+    command = paste0(getwd(),"/../target/debug/./mermaid"),
     input = md_text,
     stdout = TRUE,
     stderr = TRUE
