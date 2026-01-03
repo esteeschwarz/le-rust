@@ -5,3 +5,8 @@ edition = "2024"
 
 [dependencies]
 
+[profile.release]
+strip = true
+
+[profile.dev]
+strip = true
