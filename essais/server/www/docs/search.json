@@ -1,0 +1,51 @@
+[
+  {
+    "objectID": "play.html",
+    "href": "play.html",
+    "title": "play",
+    "section": "",
+    "text": "graph TD\n\nT[target group] --&gt;\nWH[who writes] --&gt;\nCP[with what capacities] --&gt;\n        TECH[technical]\n        CP --&gt; SC[scientifically]\n        CP--&gt;EFF[time effort]\nWH --&gt; PU[whats her use purpose of the center page] --&gt;\n        LP[landing page for individually set up project page] --&gt;\n        AB[with only project abstract]\n        --&gt; NOW[2-fold like now, with distinct project pages behind landingpage which could all be rendered differently individually, according to the framework used by the project maintainers and just needed to be pushed to main page]\n        LP--&gt;CPP[complete project presentation]--&gt;\n            IMP[needs to implement complex built paper?]--&gt;\n            STL[standard paper layout?]--&gt;\n              BU[built-in pdf export extra to online version --&gt; quarto, rmarkdown, python notebooks]\n        NOW--&gt;UI[user interaction needed?]--&gt;\n            BL[blog format]\n        NOW--&gt;META[number of metadata to be included and how displayed?]--&gt;\n         CSV[meta from .csv table, layout template to include preformatted display fields for metadata]\n    IMP --&gt; META"
+  },
+  {
+    "objectID": "play.html#mermaid",
+    "href": "play.html#mermaid",
+    "title": "play",
+    "section": "",
+    "text": "graph TD\n\nT[target group] --&gt;\nWH[who writes] --&gt;\nCP[with what capacities] --&gt;\n        TECH[technical]\n        CP --&gt; SC[scientifically]\n        CP--&gt;EFF[time effort]\nWH --&gt; PU[whats her use purpose of the center page] --&gt;\n        LP[landing page for individually set up project page] --&gt;\n        AB[with only project abstract]\n        --&gt; NOW[2-fold like now, with distinct project pages behind landingpage which could all be rendered differently individually, according to the framework used by the project maintainers and just needed to be pushed to main page]\n        LP--&gt;CPP[complete project presentation]--&gt;\n            IMP[needs to implement complex built paper?]--&gt;\n            STL[standard paper layout?]--&gt;\n              BU[built-in pdf export extra to online version --&gt; quarto, rmarkdown, python notebooks]\n        NOW--&gt;UI[user interaction needed?]--&gt;\n            BL[blog format]\n        NOW--&gt;META[number of metadata to be included and how displayed?]--&gt;\n         CSV[meta from .csv table, layout template to include preformatted display fields for metadata]\n    IMP --&gt; META"
+  },
+  {
+    "objectID": "pings.html",
+    "href": "pings.html",
+    "title": "pings",
+    "section": "",
+    "text": "{{&lt; iconify copilot-24 &gt;}} icontest\ntry ping: https://pinghook.dh-index.org\nThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.\nWhen you click the Knit button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:\n\nsummary(cars)\n\n     speed           dist       \n Min.   : 4.0   Min.   :  2.00  \n 1st Qu.:12.0   1st Qu.: 26.00  \n Median :15.0   Median : 36.00  \n Mean   :15.4   Mean   : 42.98  \n 3rd Qu.:19.0   3rd Qu.: 56.00  \n Max.   :25.0   Max.   :120.00"
+  },
+  {
+    "objectID": "pings.html#r-markdown",
+    "href": "pings.html#r-markdown",
+    "title": "pings",
+    "section": "",
+    "text": "{{&lt; iconify copilot-24 &gt;}} icontest\ntry ping: https://pinghook.dh-index.org\nThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.\nWhen you click the Knit button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:\n\nsummary(cars)\n\n     speed           dist       \n Min.   : 4.0   Min.   :  2.00  \n 1st Qu.:12.0   1st Qu.: 26.00  \n Median :15.0   Median : 36.00  \n Mean   :15.4   Mean   : 42.98  \n 3rd Qu.:19.0   3rd Qu.: 56.00  \n Max.   :25.0   Max.   :120.00"
+  },
+  {
+    "objectID": "pings.html#including-plots",
+    "href": "pings.html#including-plots",
+    "title": "pings",
+    "section": "Including Plots",
+    "text": "Including Plots\nYou can also embed plots, for example:\n\n\n\n\n\n\n\n\n\nNote that the echo = FALSE parameter was added to the code chunk to prevent printing of the R code that generated the plot."
+  },
+  {
+    "objectID": "snc.html",
+    "href": "snc.html",
+    "title": "SNC",
+    "section": "",
+    "text": "git sync folder lapsi-mini\nadded, init\nmini received\ngit clone local.git to temp/gitmini\nedit on mini\npushed on mini\nlapsi pull, received\nedit on lapsi\nflaw in post-receive, didnt deploy, corrected\nmissing deploy dir\nstill 128\nwrong dir again. wks.\n\n\n\n\n\n\nedit bela\nworking copy did only commit, not pushed? why? tried wt ulysses, there push button in commit dialogue is there…\nwc has to add remote origin mini, then push appears…\npositron ssh host window wks. via id automatic, change into temp/gitmini &gt; pull, changes appear. sh pushmini.sh\n\n\nfa include by      weui  fa arrow left    include\n\n\n\n\na lot of icon essais.\n\nadded quarto render to post-receive, wks. if pushed from mini self. now try from lapsi."
+  },
+  {
+    "objectID": "snc.html#section",
+    "href": "snc.html#section",
+    "title": "SNC",
+    "section": "",
+    "text": "edit bela\nworking copy did only commit, not pushed? why? tried wt ulysses, there push button in commit dialogue is there…\nwc has to add remote origin mini, then push appears…\npositron ssh host window wks. via id automatic, change into temp/gitmini &gt; pull, changes appear. sh pushmini.sh\n\n\nfa include by      weui  fa arrow left    include\n\n\n\n\na lot of icon essais.\n\nadded quarto render to post-receive, wks. if pushed from mini self. now try from lapsi."
+  }
+]

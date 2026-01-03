@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8" />
+		<link rel="stylesheet" type="text/css" href="https://ada-sub.dh-index.org/school/css/style.css" />
+		<title>12212.papers</title>
+  <style>
+    #container { display: flex; gap: 2rem; }
+    #content { width: 15%; border-right: 1px solid black; padding-right: 1rem; position: fixed;display: block}
+    #file_content { flex: 1; 
+        padding-left: 25%; }
+    #content ul { list-style: none; padding: 0; }
+    #content li { margin: 0.5rem 0; cursor: pointer; color: blue; }
+    #content li:hover { text-decoration: underline; }
+    .index {position: fixed;background-color:white;display: block;top: 1%;width:80%;border-bottom:1px solid black;}
+    #blank {top: 0px;position:fixed;width:80%;height:12%;background-color:white;}
+  </style>
+</head>
+<body>
+    <div id="blank">16011.snc</div>      
+    <h1 class="index">INDEX</h1>
+
+  <div id="container">
+    
+    <div id="content">
+  <!-- Filled by JS with list of titles -->
+      Loading list...
+    </div>
+    <div id="file_content">
+      <!-- Selected doc content will be inserted here -->
+      Select a document from the list.
+    </div>
+  </div>
+
+  <script>
+    async function fetchJson(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    }
+
+    async function fetchText(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.text();
+    }
+
+    async function init() {
+      const listDiv = document.getElementById("content");
+      const contentDiv = document.getElementById("file_content");
+
+      let docs;
+      try {
+        docs = await fetchJson("/query");
+      } catch (e) {
+        listDiv.textContent = "Error loading list: " + e.message;
+        return;
+      }
+
+      // Option A: lazy-load content on click (simpler, network-light)
+      // Option B: prefetch all content; here we'll do lazy-load to start.
+
+      const ul = document.createElement("ul");
+      docs.forEach(doc => {
+        const li = document.createElement("li");
+        li.textContent = doc.title;
+        li.addEventListener("click", async () => {
+          try {
+            const html = await fetchText(doc.path);
+            // Insert the raw HTML; you might want to sanitize in real apps.
+            contentDiv.innerHTML = html;
+          } catch (e) {
+            contentDiv.textContent = "Error loading document: " + e.message;
+          }
+        });
+        ul.appendChild(li);
+      });
+
+      listDiv.innerHTML = "";
+      listDiv.appendChild(ul);
+    }
+
+    init();
+  </script>
+</body>
+</html>
