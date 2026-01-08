@@ -365,8 +365,8 @@ async function handleDocCommand(
 async function fetchAvailableModels(baseUrl: string): Promise<string[]> {
   try {
     const response = await fetch(`${baseUrl}/api/tags`);
-    const data = await response.json();
-    return data.models?.map((m: any) => m.name) || [];
+    const data = await response.json() as { models?: Array<{ name: string }> };
+    return data.models?.map((m) => m.name) || [];
   } catch {
     return ['llama2', 'codellama', 'mistral'];
   }

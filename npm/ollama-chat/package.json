@@ -2,15 +2,25 @@
   "name": "ollama-chat",
   "displayName": "Ollama Chat",
   "description": "AI coding assistant powered by local Ollama models",
-  "version": "1.0.0",
+  "version": "0.0.4",
   "engines": {
     "vscode": "^1.90.0"
   },
+  "id": "ollama.chat",
+  "publisher": "ids",
   "categories": [
     "AI",
     "Chat",
     "Programming Languages"
   ],
+   "chatAgents": [
+    {
+      "id": "my.ollama.agent",
+      "name": "My OLLAMA Chat Agent",
+      "description": "A custom chat agent using local OLLAMA API",
+      "version": "0.0.4"    }
+  ],
+
   "activationEvents": [
     "onStartupFinished"
   ],
@@ -20,7 +30,7 @@
       {
         "id": "ollama.chat",
         "name": "ollama",
-        "description": "AI assistant powered by local Ollama models",
+        "description": "local AI Ollama models",
         "isSticky": true,
         "commands": [
           {
@@ -42,6 +52,7 @@
         ]
       }
     ],
+    
     "commands": [
       {
         "command": "ollama.configure",
@@ -58,16 +69,17 @@
         },
         "ollama.model": {
           "type": "string",
-          "default": "llama3.2",
+          "default": "llama3",
           "description": "Default Ollama model to use",
           "enum": [
             "llama2",
-            "llama3.2",
+            "llama3",
             "codellama",
             "mistral",
             "mixtral",
             "deepseek-coder",
-            "qwen2.5-coder"
+            "qwen2.5-coder",
+            "deepseek-r1"
           ]
         },
         "ollama.temperature": {
