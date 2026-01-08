@@ -2,7 +2,7 @@
   "name": "ollama-chat",
   "displayName": "Ollama Chat",
   "description": "AI coding assistant powered by local Ollama models",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "engines": {
     "vscode": "^1.90.0"
   },
@@ -12,13 +12,6 @@
     "AI",
     "Chat",
     "Programming Languages"
-  ],
-   "chatAgents": [
-    {
-      "id": "my.ollama.agent",
-      "name": "My OLLAMA Chat Agent",
-      "description": "A custom chat agent using local OLLAMA API",
-      "version": "0.0.4"    }
   ],
 
   "activationEvents": [
