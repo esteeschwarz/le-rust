@@ -1,0 +1,97 @@
+{
+  "name": "ollama-chat",
+  "displayName": "Ollama Chat",
+  "description": "AI coding assistant powered by local Ollama models",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "AI",
+    "Chat",
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "chatParticipants": [
+      {
+        "id": "ollama.chat",
+        "name": "ollama",
+        "description": "AI assistant powered by local Ollama models",
+        "isSticky": true,
+        "commands": [
+          {
+            "name": "explain",
+            "description": "Explain selected code or concept"
+          },
+          {
+            "name": "fix",
+            "description": "Find and fix issues in code"
+          },
+          {
+            "name": "test",
+            "description": "Generate unit tests for code"
+          },
+          {
+            "name": "doc",
+            "description": "Generate documentation for code"
+          }
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "ollama.configure",
+        "title": "Ollama: Configure Connection"
+      }
+    ],
+    "configuration": {
+      "title": "Ollama Chat",
+      "properties": {
+        "ollama.baseUrl": {
+          "type": "string",
+          "default": "http://localhost:11434",
+          "description": "Ollama API base URL"
+        },
+        "ollama.model": {
+          "type": "string",
+          "default": "llama3.2",
+          "description": "Default Ollama model to use",
+          "enum": [
+            "llama2",
+            "llama3.2",
+            "codellama",
+            "mistral",
+            "mixtral",
+            "deepseek-coder",
+            "qwen2.5-coder"
+          ]
+        },
+        "ollama.temperature": {
+          "type": "number",
+          "default": 0.7,
+          "minimum": 0,
+          "maximum": 2,
+          "description": "Temperature for response generation"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.90.0",
+    "@types/node": "^20.x",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.3.0"
+  }
+}

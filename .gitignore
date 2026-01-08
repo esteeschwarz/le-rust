@@ -4,3 +4,5 @@
 #.html
 **/Cargo.lock
 **/database.db
+**/node_modules
+**/npm/**/out
