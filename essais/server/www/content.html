@@ -10,6 +10,9 @@
     #content { margin-top: 2%;width: 15%; top:90px;border-right: 2px solid black; padding-right: 1rem; position: fixed;display: block}
     #file_content { flex: 1; 
         padding-left: 25%; margin-top: 60px;  }
+    #content-frame { flex: 1; 
+        padding-left: 25%; margin-top: 60px;  display:none;}
+    
     #content ul { list-style: none; padding: 0; }
     #content li { margin: 0.5rem 0; cursor: pointer; color: blue; }
     #content li:hover { text-decoration: none; }
@@ -27,10 +30,14 @@
     <div id="content">
   <!-- Filled by JS with list of titles -->
       Loading list...
+
     </div>
+                <!-- <iframe id="content-frame" title="Isolated Content" style="border:none; width:100%; height:500px;"></iframe> -->
+
     <div id="file_content">
       <!-- Selected doc content will be inserted here -->
       Select a document from the list.
+
     </div>
   </div>
 
@@ -51,6 +58,20 @@
       const listDiv = document.getElementById("content");
       const contentDiv = document.getElementById("file_content");
       const contentTitle = document.getElementById("c_name");
+      // const shadow = contentDiv.attachShadow({ mode: 'open' });
+      const iframe = document.getElementById('content-frame');
+      const htmlfixed =  `
+  <style>
+    :host { all: initial; display: block; } /* Reset all inherited styles */
+    h1 { color: blue; } /* Styles apply ONLY inside this shadow DOM */
+  </style>
+  <div class="child-content">
+    <h1>Isolated Content</h1>
+    <p>Parent CSS cannot touch me!</p>
+  </div>
+`;
+
+      // const shadow = document.createElement("iframe");
 
       let docs;
       try {
@@ -69,9 +90,15 @@
         li.textContent = doc.title;
         li.addEventListener("click", async () => {
           try {
+
             const html = await fetchText(doc.path);
             // Insert the raw HTML; you might want to sanitize in real apps.
             contentDiv.innerHTML = html;
+            // shadow.innerHTML = html;
+            // iframe.srcdoc = htmlContent;
+            // iframe.srcdoc = htmlfixed;
+            // iframe.srcdoc = html;
+
             contentTitle.innerHTML = doc.title;
 
           } catch (e) {
